@@ -1,4 +1,4 @@
-#include "../Node.h"
+#include "Node.h"
 #include "gmock/gmock.h"
 
 
