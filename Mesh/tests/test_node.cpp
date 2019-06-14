@@ -63,3 +63,13 @@ TEST(MeshLib_Node, is_at){
     EXPECT_FALSE(node1.isAt( {1.3, 3.2, 4.1} ));
     EXPECT_DEATH(node1.isAt( {3.2, 2.1} ), "");
 }
+
+TEST(MeshLib_Node, boudnary){
+    Node node1(3, {2.1, 4.2, 5.3});
+
+    EXPECT_FALSE(node1.isOnBoundary());
+    node1.makeBoundaryNode();
+    EXPECT_TRUE(node1.isOnBoundary());
+    node1.makeInteriorNode();
+    EXPECT_FALSE(node1.isOnBoundary());
+}

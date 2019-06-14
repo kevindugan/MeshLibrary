@@ -6,7 +6,8 @@ Node::Node(const unsigned int dim,
     assert (coords.size() == dim);
     assert ( dim >= 1 && dim <= 3);
 
-    this->coordinates = coords;               
+    this->coordinates = coords;
+    this->onBoundary = false;           
 }
 
 bool Node::operator==(const Node &other) const {

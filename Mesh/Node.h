@@ -20,10 +20,15 @@ class Node {
         bool operator<(const Node &) const;
         bool isAt(const std::vector<float> &coords) const;
 
+        bool isOnBoundary() const {return this->onBoundary;}
+        void makeBoundaryNode() {this->onBoundary = true;}
+        void makeInteriorNode() {this->onBoundary = false;}
+
     private:
         unsigned int dimension;
         std::vector<float> coordinates;
         constexpr static const float eps = 1.0e-6;
+        bool onBoundary;
 };
 
 #endif // NODE_H_0V9A
