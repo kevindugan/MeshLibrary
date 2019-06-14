@@ -1,17 +1,22 @@
 #include "Mesh.h"
 
-Mesh::Mesh(const std::vector<float> &maxVerts,
+Mesh::Mesh(const std::vector<float> &minVerts,
+           const std::vector<float> &maxVerts,
            const std::vector<unsigned int> &nCells,
            unsigned int processor){
     
+    assert (minVerts.size() == maxVerts.size());
+    for (unsigned int i = 0; i < minVerts.size(); i++)
+        assert (minVerts[i] < maxVerts[i]);
     assert (maxVerts.size() == nCells.size());
     this->dimension = nCells.size();
     assert (this->dimension >= 1 and this->dimension <= 3);
     this->owningProcessor = processor;
 
+    // Get delta for each direction
     std::vector<float> delta;
     for (unsigned int i = 0; i < this->dimension; i++)
-        delta.push_back( maxVerts[i] / float(nCells[i]) );
+        delta.push_back( (maxVerts[i] - minVerts[i]) / float(nCells[i]) );
 
     // Setup Cartesian vertices
     unsigned int nVertices = 1;
@@ -161,7 +166,7 @@ void Mesh::print(std::ostream &out) const {
         for (const auto p : v->getCoords())
             out << std::setw(14) << std::scientific << std::setprecision(6) << p;
         // Points must contain 3 components
-        for (unsigned int i = this->dimension; i < 3; i++);
+        for (unsigned int i = this->dimension; i < 3; i++)
             out << std::setw(14) << std::scientific << std::setprecision(6) << 0.0;
         out << std::endl;
     }
