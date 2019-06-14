@@ -4,10 +4,12 @@
 #include <vector>
 #include <assert.h>
 #include <cmath>
+#include <iostream>
 
 class Node {
 
     public:
+        Node() = delete;
         Node(const unsigned int dim, 
              const std::vector<float> &coords);
 
@@ -15,6 +17,7 @@ class Node {
         unsigned int getDimension() const {return this->dimension;}
 
         bool operator==(const Node &) const;
+        bool operator<(const Node &) const;
         bool isAt(const std::vector<float> &coords) const;
 
     private:

@@ -20,6 +20,11 @@ bool Node::operator==(const Node &other) const {
     return result;
 }
 
+bool Node::operator<(const Node &other) const {
+    assert (other.getDimension() == this->dimension);
+    return this->coordinates < other.getCoords();
+}
+
 bool Node::isAt(const std::vector<float> &coords) const {
     assert (coords.size() == dimension);
 
