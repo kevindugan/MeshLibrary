@@ -11,8 +11,6 @@ Element::Element(const unsigned int dim,
 
     // Testing that vertices are unique
     std::vector<std::shared_ptr<Node>> testUnique = vertices;
-    auto ptr_lt = [](std::shared_ptr<Node> left, std::shared_ptr<Node> right) {return *left < *right;};
-    auto ptr_eq = [](std::shared_ptr<Node> left, std::shared_ptr<Node> right) {return *left == *right;};
     std::sort(testUnique.begin(), testUnique.end(), ptr_lt);
     auto it = std::unique(testUnique.begin(), testUnique.end(), ptr_eq);
     assert (it == testUnique.end());
@@ -26,7 +24,6 @@ bool Element::operator==(const Element &other) const {
     auto myVert = this->vertices;
     assert (otherVert.size() == myVert.size());
 
-    auto ptr_lt = [](std::shared_ptr<Node> left, std::shared_ptr<Node> right) {return *left < *right;};
     std::sort(otherVert.begin(), otherVert.end(), ptr_lt);
     std::sort(myVert.begin(), myVert.end(), ptr_lt);
     
@@ -42,7 +39,6 @@ bool Element::operator<(const Element &other) const {
     auto myVert = this->vertices;
     assert (otherVert.size() == myVert.size());
 
-    auto ptr_lt = [](std::shared_ptr<Node> left, std::shared_ptr<Node> right) {return *left < *right;};
     std::sort(otherVert.begin(), otherVert.end(), ptr_lt);
     std::sort(myVert.begin(), myVert.end(), ptr_lt);
 
@@ -74,6 +70,30 @@ std::vector<std::shared_ptr<Node>> Element::getBoundaryNodes() const {
             result.push_back(v);
 
     return result;
+}
+
+unsigned int Element::numFaceVertices() const {
+    return pow(2, this->dimension-1);
+}
+
+bool Element::isNeighborElement(std::shared_ptr<Element> other){
+    auto otherVert = other->getVertices();
+    auto myVert = this->vertices;
+    assert (otherVert.size() == myVert.size());
+
+    // Sort vertices
+    std::sort(otherVert.begin(), otherVert.end(), ptr_lt);
+    std::sort(myVert.begin(), myVert.end(), ptr_lt);
+
+    // Intersection
+    std::vector<std::shared_ptr<Node>> intersection(2*myVert.size());
+    auto it = std::set_intersection(myVert.begin(), myVert.end(),
+                                    otherVert.begin(), otherVert.end(),
+                                    intersection.begin(), ptr_lt);
+
+    intersection.resize(it - intersection.begin());
+
+    return intersection.size() == this->numFaceVertices();
 }
 
 void Element::addNeighborElement(std::shared_ptr<Element> other){
