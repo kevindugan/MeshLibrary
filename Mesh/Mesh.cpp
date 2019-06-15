@@ -17,6 +17,9 @@ Mesh::Mesh(const std::vector<float> &minVerts,
     this->generateElements(nCells);
 
     unsigned int index = 0;
+    printf("========================\n");
+    printf("Neighbors\n");
+    printf("========================\n");
     for (const auto e : this->elements){
         printf("Neighbors[%2d]: ", index );
         for (const auto n : e->getNeighbors()){
@@ -124,7 +127,19 @@ void Mesh::generateElements(const std::vector<unsigned int> &nCells){
         std::vector<std::shared_ptr<Node>> nodeList;
         for (const auto index : e)
             nodeList.push_back(this->vertices[index]);
-        this->elements.push_back( std::make_shared<Element>(Element(this->dimension, nodeList)) );
+        
+        auto newElement = std::make_shared<Element>(Element(this->dimension, nodeList));
+        for ( const auto other : this->elements)
+            if (newElement->isNeighborElement(other)){
+                other->addNeighborElement(newElement);
+                newElement->addNeighborElement(other);
+            }
+        this->elements.push_back( newElement );
+        
+        // this->elements.insert(
+        //     std::upper_bound( this->elements.begin(), this->elements.end(), newElement, ptr_lt<Element>),
+        //     newElement
+        // );
     }
 
     // for (const auto &v : this->elementConnectivity)
