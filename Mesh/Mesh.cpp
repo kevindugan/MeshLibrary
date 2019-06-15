@@ -16,6 +16,11 @@ Mesh::Mesh(const std::vector<float> &minVerts,
     this->generateVertices(minVerts, maxVerts, nCells);
     this->generateElements(nCells);
 
+    unsigned int index = 0;
+    for (const auto e : this->elements){
+        printf("Neighbors[%2d]: ", index);
+        printf("\n");
+    }
 }
 
 void Mesh::generateVertices(const std::vector<float> &minVerts,
@@ -242,5 +247,10 @@ void Mesh::print(std::ostream &out) const {
     out << indent << "</UnstructuredGrid>" << std::endl;
     indent = decreaseIndent(indent);
     out << indent << "</VTKFile>" << std::endl;
+
+}
+
+void Mesh::partitionMesh(const unsigned int nParts){
+    // Create Element adjacenty (CSR format)
 
 }

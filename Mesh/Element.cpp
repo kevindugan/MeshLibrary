@@ -1,7 +1,7 @@
 #include "Element.h"
 
 Element::Element(const unsigned int dim,
-                 const std::vector<std::shared_ptr<Node>> &vertices){
+                 const std::vector<std::shared_ptr<Node>> &vertices) : dimension(dim) {
 
     // Forcing quad elements
     assert (vertices.size() == std::pow(2, dim));
@@ -35,6 +35,27 @@ bool Element::operator==(const Element &other) const {
         result &= (*myVert[i] == *otherVert[i]);
 
     return result;
+}
+
+bool Element::operator<(const Element &other) const {
+    auto otherVert = other.getVertices();
+    auto myVert = this->vertices;
+    assert (otherVert.size() == myVert.size());
+
+    auto ptr_lt = [](std::shared_ptr<Node> left, std::shared_ptr<Node> right) {return *left < *right;};
+    std::sort(otherVert.begin(), otherVert.end(), ptr_lt);
+    std::sort(myVert.begin(), myVert.end(), ptr_lt);
+
+    std::vector<float> left, right;
+    left.reserve(myVert.size() * this->dimension);
+    right.reserve(myVert.size() * this->dimension);
+    for (unsigned int i = 0; i < myVert.size(); i++){
+        for (const auto v : myVert[i]->getCoords())
+            left.push_back(v);
+        for (const auto v : otherVert[i]->getCoords())
+            right.push_back(v);
+    }
+    return left < right;
 }
 
 unsigned int Element::numBoundaryNodes() const {

@@ -13,6 +13,7 @@ class Element {
                 const std::vector<std::shared_ptr<Node>> &vertices);
 
         bool operator==(const Element &other) const;
+        bool operator<(const Element &other) const;
         std::vector<std::shared_ptr<Node>> getVertices() const {return this->vertices;}
 
         unsigned int numBoundaryNodes() const;
@@ -25,6 +26,7 @@ class Element {
     private:
         std::vector<std::shared_ptr<Node>> vertices;
         std::vector<std::shared_ptr<Element>> neighbors;
+        const unsigned int dimension;
 };
 
 #endif // ELEMENT_H_3KLA

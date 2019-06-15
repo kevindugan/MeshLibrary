@@ -3,6 +3,7 @@
 
 #include "Element.h"
 #include <iomanip>
+#include "metis.h"
 
 class Mesh {
 
@@ -14,6 +15,7 @@ class Mesh {
              unsigned int processor=0);
 
         void print(std::ostream &out=std::cout) const;
+        void partitionMesh(const unsigned int nPartitions);
 
     private:
         unsigned int dimension, owningProcessor;

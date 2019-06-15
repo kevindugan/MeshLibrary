@@ -72,10 +72,45 @@ TEST(MeshLib_Element, comparison){
     Element elem2(2, {vert[0], vert[1], vert[4], vert[3]});
     Element elem3(2, {vert[0], vert[1], vert[5], vert[3]});
     Element elem4(2, {vert[4], vert[5], vert[8], vert[7]});
+    Element elem5(2, {vert[0], vert[4], vert[3], vert[1]});
 
     EXPECT_TRUE(elem1 == elem2);
     EXPECT_FALSE(elem1 == elem3);
     EXPECT_FALSE(elem1 == elem4);
+    EXPECT_TRUE(elem1 == elem5);
+}
+
+TEST(MeshLib_Element, compparison_lt){
+    std::vector<std::shared_ptr<Node>> vert;
+    vert.push_back( std::make_shared<Node>(Node(2, {0.0, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.1, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.2, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.0, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.1, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.2, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.0, 0.2})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.1, 0.2})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.2, 0.2})) );
+
+
+    Element elem1(2, {vert[0], vert[1], vert[4], vert[3]});
+    Element elem2(2, {vert[0], vert[1], vert[4], vert[3]});
+    Element elem3(2, {vert[0], vert[1], vert[5], vert[3]});
+    Element elem4(2, {vert[4], vert[5], vert[8], vert[7]});
+    Element elem5(2, {vert[0], vert[4], vert[3], vert[1]});
+
+    EXPECT_FALSE( elem1 < elem2 );
+    EXPECT_FALSE( elem2 < elem1 );
+    EXPECT_FALSE( elem1 < elem5 );
+    EXPECT_FALSE( elem5 < elem1 );
+
+    EXPECT_TRUE( elem1 < elem3 );
+    EXPECT_TRUE( elem1 < elem4 );
+    EXPECT_TRUE( elem3 < elem4 );
+    EXPECT_FALSE( elem3 < elem1 );
+    EXPECT_FALSE( elem4 < elem1 );
+    EXPECT_FALSE( elem4 < elem3 );
+
 }
 
 TEST(MeshLib_Element, neighbors){
