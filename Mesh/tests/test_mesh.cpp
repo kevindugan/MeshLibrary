@@ -159,16 +159,24 @@ TEST(MeshLib_Mesh, partition){
     auto start = high_resolution_clock::now();
     Mesh cart({0.0, 0.0},
               {1.0, 1.0},
-              {50, 51});
+              {65, 42});
     auto duration = duration_cast<seconds>(high_resolution_clock::now() - start);
-    printf("Initialization Elapsed Time: %4ds\n", int(duration.count()));
+    printf("2D Init Elapsed Time: %4ds\n", int(duration.count()));
 
     cart.partitionMesh(8);
-    // std::ofstream output("output2d.vtu", std::ofstream::out);
-    // cart.print(output);
-    // output.close();
+    std::ofstream output2d("output2d.vtu", std::ofstream::out);
+    cart.print(output2d);
+    output2d.close();
 
+    start = high_resolution_clock::now();
     Mesh cart2({0.0, 0.0, 0.0},
                {1.0, 2.0, 3.0},
-               {5, 3, 4});
+               {53, 44, 31});
+    duration = duration_cast<seconds>(high_resolution_clock::now() - start);
+    printf("3D Init Elapsed Time: %4ds\n", int(duration.count()));
+
+    cart2.partitionMesh(8);
+    std::ofstream output3d("output3d.vtu", std::ofstream::out);
+    cart2.print(output3d);
+    output3d.close();
 }

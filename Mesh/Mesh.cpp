@@ -110,24 +110,47 @@ void Mesh::generateElements(const std::vector<unsigned int> &nCells){
         this->elementConnectivity[elem] = vertexList;
     }
 
+    // Create Element pointer list
     this->elements.reserve(nElements);
+    unsigned int elementIndex = 0;
     for (const auto e : this->elementConnectivity){
         std::vector<std::shared_ptr<Node>> nodeList;
         for (const auto index : e)
             nodeList.push_back(this->vertices[index]);
         
+        
         auto newElement = std::make_shared<Element>(Element(this->dimension, nodeList));
-        for ( const auto other : this->elements)
+        // Find Neighbors
+        std::vector<int> potentialNeighborIndices;
+        potentialNeighborIndices.reserve(pow(2, this->dimension-1));
+        unsigned int offset = 1;
+        for (unsigned int dim = 0; dim < nCells.size(); dim++){
+            potentialNeighborIndices.push_back(elementIndex - offset);
+            potentialNeighborIndices.push_back(elementIndex + offset);
+            offset *= nCells[dim];
+        }
+        std::sort(potentialNeighborIndices.begin(), potentialNeighborIndices.end());
+        auto outsideRange = [=](const int test){return (test < 0);};
+        auto last = std::remove_if(potentialNeighborIndices.begin(), potentialNeighborIndices.end(), outsideRange);
+        potentialNeighborIndices.resize(last - potentialNeighborIndices.begin());
+
+        // printf("Potential Neighbors: ");
+        // for (const auto n : potentialNeighborIndices)
+        //     printf("%6d", n);
+        // printf("\n");
+        
+        for (const auto otherIndex : potentialNeighborIndices){
+            if (otherIndex > elementIndex)
+                break;
+            auto other = this->elements[otherIndex];
             if (newElement->isNeighborElement(other)){
                 other->addNeighborElement(newElement);
                 newElement->addNeighborElement(other);
             }
+        }
+
         this->elements.push_back( newElement );
-        
-        // this->elements.insert(
-        //     std::upper_bound( this->elements.begin(), this->elements.end(), newElement, ptr_lt<Element>),
-        //     newElement
-        // );
+        elementIndex++;
     }
 
     // for (const auto &v : this->elementConnectivity)
@@ -328,6 +351,6 @@ void Mesh::partitionMesh(const unsigned int nParts_in){
         this->partition.push_back( static_cast<unsigned int>(e) );
 
     // Output Elapsed time
-    auto duration = duration_cast<milliseconds>(high_resolution_clock::now() - start);
-    printf("Partitioning Elapsed Time: %4dms\n", int(duration.count()));
+    auto duration = duration_cast<seconds>(high_resolution_clock::now() - start);
+    printf("Partitioning Elapsed Time: %4ds\n", int(duration.count()));
 }
