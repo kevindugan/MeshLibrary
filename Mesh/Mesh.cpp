@@ -16,6 +16,7 @@ Mesh::Mesh(const std::vector<float> &minVerts,
     this->generateVertices(minVerts, maxVerts, nCells);
     this->generateElements(nCells);
 
+    this->partition.resize(this->elements.size(), this->owningProcessor);
 }
 
 void Mesh::generateVertices(const std::vector<float> &minVerts,
@@ -169,8 +170,8 @@ void Mesh::print(std::ostream &out) const {
     indent = increaseIndent(indent);
     out << indent << "<DataArray Name=\"Partition\" type=\"Int32\" NumberOfComponents=\"1\" format=\"ascii\">" << std::endl;
     indent = increaseIndent(indent);
-    for (const auto elem : this->elements)
-        out << indent << std::setw(6) << this->owningProcessor << std::endl;
+    for (const auto elem : this->partition)
+        out << indent << std::setw(6) << elem << std::endl;
     indent = decreaseIndent(indent);
     out << indent << "</DataArray>" << std::endl;
     indent = decreaseIndent(indent);
@@ -287,7 +288,46 @@ Pair_UI_UI Mesh::getElementAdjacency() const{
     return result;
 }
 
-void Mesh::partitionMesh(const unsigned int nParts){
+void Mesh::partitionMesh(const unsigned int nParts_in){
+    using namespace std::chrono;
+    auto start = high_resolution_clock::now();
     // Create Element adjacenty (CSR format)
+    Pair_UI_UI adj = this->getElementAdjacency();
 
+    // Convert adjacency to METIS compatible
+    using Vec_IDX = std::vector<idx_t>;
+    using Pair_IDX_IDX = std::pair<Vec_IDX, Vec_IDX>;
+    Pair_IDX_IDX adjacency = std::make_pair<Vec_IDX, Vec_IDX>(Vec_IDX(adj.first.size()), Vec_IDX(adj.second.size()));
+    for (unsigned int i = 0; i < adj.first.size(); i++)
+        adjacency.first[i] = static_cast<idx_t>(adj.first[i]);
+    for (unsigned int i = 0; i < adj.second.size(); i++)
+        adjacency.second[i] = static_cast<idx_t>(adj.second[i]);
+
+    // METIS Partitioning
+    idx_t nElements = static_cast<idx_t>( this->elements.size() );
+    idx_t nConstraints = 1;
+    idx_t objectiveValue;
+    idx_t nParts = static_cast<idx_t>( nParts_in );
+    std::vector<idx_t> METISpartition(this->elements.size());
+    unsigned int err = METIS_PartGraphRecursive(&nElements, &nConstraints,
+                                                adjacency.first.data(),
+                                                adjacency.second.data(),
+                                                NULL, NULL, NULL, &nParts, NULL,
+                                                NULL, NULL, &objectiveValue,
+                                                METISpartition.data());
+
+    // unsigned int index = 0;
+    // for (const auto e : METISpartition){
+    //     printf("Element %4d,  Owned by: %4d\n", index, METISpartition[index]);
+    //     index++;
+    // }
+
+    // Save partition
+    this->partition.clear();
+    for (const auto e : METISpartition)
+        this->partition.push_back( static_cast<unsigned int>(e) );
+
+    // Output Elapsed time
+    auto duration = duration_cast<milliseconds>(high_resolution_clock::now() - start);
+    printf("Partitioning Elapsed Time: %4dms\n", int(duration.count()));
 }

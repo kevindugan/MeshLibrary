@@ -3,6 +3,7 @@
 
 #include "Element.h"
 #include <iomanip>
+#include <chrono>
 #include "metis.h"
 
 using Pair_UI_UI = std::pair<std::vector<unsigned int>, std::vector<unsigned int>>;
@@ -22,6 +23,7 @@ class Mesh {
 
     private:
         unsigned int dimension, owningProcessor;
+        std::vector<unsigned int> partition;
         std::vector<std::shared_ptr<Node>> vertices;
         std::vector<std::shared_ptr<Element>> elements;
         std::vector<std::vector<unsigned int>> elementConnectivity;

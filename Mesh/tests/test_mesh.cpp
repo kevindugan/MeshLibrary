@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "gmock/gmock.h"
 #include <sstream>
+#include <fstream>
 
 using ::testing::ElementsAreArray;
 
@@ -44,7 +45,7 @@ TEST(MeshLib_Mesh, print){
     EXPECT_GT(output2.str().size(), output1.str().size());
 }
 
-TEST(MeshLib_Mesh, partition){
+TEST(MeshLib_Mesh, adjacency){
 
     Mesh cart({0.0, 0.0},
               {1.0, 2.0},
@@ -150,4 +151,24 @@ TEST(MeshLib_Mesh, partition){
     EXPECT_THAT(adj1.second, ElementsAreArray(expected1));
     EXPECT_THAT(adj2.first, ElementsAreArray(expectedIndex2));
     EXPECT_THAT(adj2.second, ElementsAreArray(expected2));
+}
+
+TEST(MeshLib_Mesh, partition){
+
+    using namespace std::chrono;
+    auto start = high_resolution_clock::now();
+    Mesh cart({0.0, 0.0},
+              {1.0, 1.0},
+              {50, 51});
+    auto duration = duration_cast<seconds>(high_resolution_clock::now() - start);
+    printf("Initialization Elapsed Time: %4ds\n", int(duration.count()));
+
+    cart.partitionMesh(8);
+    // std::ofstream output("output2d.vtu", std::ofstream::out);
+    // cart.print(output);
+    // output.close();
+
+    Mesh cart2({0.0, 0.0, 0.0},
+               {1.0, 2.0, 3.0},
+               {5, 3, 4});
 }
