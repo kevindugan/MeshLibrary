@@ -14,6 +14,13 @@ message(STATUS "Configuring GTest")
 enable_testing()
 add_subdirectory(contrib/gtest)
 
+# This variable is used to disable tests which check assertions
+string( TOLOWER "${CMAKE_BUILD_TYPE}" build_type_lower )
+if( build_type_lower STREQUAL "debug" OR build_type_lower STREQUAL "")
+    message(STATUS "Adding Debug Mode")
+    add_compile_definitions(DEBUG_MODE)
+endif()
+
 #####################################
 # METIS
 #####################################

@@ -1,7 +1,13 @@
 #include "Element.h"
 #include "gmock/gmock.h"
 
-TEST(MeshLib_Element, constructor){
+#ifdef DEBUG_MODE
+#  define DebugTestName(testName) testName
+#else
+#  define DebugTestName(testName) DISABLED_ ## testName
+#endif
+
+TEST(DebugTestName(MeshLib_Element), constructor){
 
     std::vector<std::shared_ptr<Node>> vertices1;
     vertices1.push_back( std::make_shared<Node>(Node(2, {0.0, 0.0})) );
@@ -189,11 +195,29 @@ TEST(MeshLib_Element, neighbors){
 
     elem5.removeNeighborElement(std::make_shared<Element>(elem4));
     EXPECT_EQ(elem5.numNeighbors(), 3);
+}
+
+TEST(DebugTestName(MeshLib_Element), neighbors_debug){
+    std::vector<std::shared_ptr<Node>> vert;
+    vert.push_back( std::make_shared<Node>(Node(2, {0.0, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.1, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.2, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.3, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.0, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.1, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.2, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.3, 0.1})) );
+
+    Element elem1(2, {vert[0], vert[1], vert[5], vert[4]});
+    Element elem2(2, {vert[1], vert[2], vert[6], vert[5]});
+    Element elem3(2, {vert[2], vert[3], vert[7], vert[6]});
+
+    elem1.addNeighborElement(std::make_shared<Element>(elem2));
 
     // Check death on re-adding neighbor
-    EXPECT_DEATH(elem7.addNeighborElement(std::make_shared<Element>(elem8)), "");
+    EXPECT_DEATH(elem1.addNeighborElement(std::make_shared<Element>(elem2)), "");
     // Check removing non-existent neighbor
-    EXPECT_DEATH(elem6.removeNeighborElement(std::make_shared<Element>(elem1)), "");
+    EXPECT_DEATH(elem2.removeNeighborElement(std::make_shared<Element>(elem3)), "");
 }
 
 TEST(MeshLib_Element, check_neighbor_2d){

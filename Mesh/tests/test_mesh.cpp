@@ -3,9 +3,15 @@
 #include <sstream>
 #include <fstream>
 
+#ifdef DEBUG_MODE
+#  define DebugTestName(testName) testName
+#else
+#  define DebugTestName(testName) DISABLED_ ## testName
+#endif
+
 using ::testing::ElementsAreArray;
 
-TEST(MeshLib_Mesh, constructor){
+TEST(DebugTestName(MeshLib_Mesh), constructor){
     Mesh cart({0.0, 0.0},
               {1.0, 2.0},
               {3, 3});
@@ -159,7 +165,7 @@ TEST(MeshLib_Mesh, partition){
     auto start = high_resolution_clock::now();
     Mesh cart({0.0, 0.0},
               {1.0, 1.0},
-              {65, 42});
+              {6, 4});
     auto duration = duration_cast<seconds>(high_resolution_clock::now() - start);
     printf("2D Init Elapsed Time: %4ds\n", int(duration.count()));
 
@@ -171,7 +177,7 @@ TEST(MeshLib_Mesh, partition){
     start = high_resolution_clock::now();
     Mesh cart2({0.0, 0.0, 0.0},
                {1.0, 2.0, 3.0},
-               {53, 44, 31});
+               {5, 4, 3});
     duration = duration_cast<seconds>(high_resolution_clock::now() - start);
     printf("3D Init Elapsed Time: %4ds\n", int(duration.count()));
 
