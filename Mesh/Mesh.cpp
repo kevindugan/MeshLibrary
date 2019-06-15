@@ -18,8 +18,13 @@ Mesh::Mesh(const std::vector<float> &minVerts,
 
     unsigned int index = 0;
     for (const auto e : this->elements){
-        printf("Neighbors[%2d]: ", index);
+        printf("Neighbors[%2d]: ", index );
+        for (const auto n : e->getNeighbors()){
+            auto it = std::find(this->elements.begin(), this->elements.end(), n);
+            printf("%4d", int(it - this->elements.begin() ));
+        }
         printf("\n");
+        index++;
     }
 }
 

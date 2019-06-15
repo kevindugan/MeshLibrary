@@ -43,9 +43,5 @@ TEST(MeshLib_Mesh, print){
 }
 
 TEST(MeshLib_Mesh, partition){
-    std::vector<std::vector<float>> verts;
-    verts = {{0, 0}, {0.1, 0.0}, {0.0, 0.1}, {0.1, 0.1}};
-    std::sort(verts.begin(), verts.end());
-    for (const auto &e : verts)
-        printf("(%4.1f, %4.1f)\n", e[0], e[1]);
+    
 }

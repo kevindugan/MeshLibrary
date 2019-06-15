@@ -23,6 +23,7 @@ class Element {
         void addNeighborElement(std::shared_ptr<Element>);
         void removeNeighborElement(std::shared_ptr<Element>);
         unsigned int numNeighbors() const;
+        std::vector<std::shared_ptr<Element>> getNeighbors() const {return neighbors;}
 
         unsigned int numFaceVertices() const;
 
@@ -31,8 +32,13 @@ class Element {
         std::vector<std::shared_ptr<Element>> neighbors;
         const unsigned int dimension;
         
-        static bool ptr_lt(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {return *left < *right;}
-        static bool ptr_eq(std::shared_ptr<Node> left, std::shared_ptr<Node> right) {return *left == *right;}
 };
+
+template<class Type>
+bool ptr_lt(std::shared_ptr<Type> left, std::shared_ptr<Type> right)
+{return *left < *right;}
+template<class Type>
+bool ptr_eq(std::shared_ptr<Type> left, std::shared_ptr<Type> right) 
+{return *left == *right;}
 
 #endif // ELEMENT_H_3KLA
