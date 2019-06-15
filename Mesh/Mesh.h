@@ -5,6 +5,8 @@
 #include <iomanip>
 #include "metis.h"
 
+using Pair_UI_UI = std::pair<std::vector<unsigned int>, std::vector<unsigned int>>;
+
 class Mesh {
 
     public:
@@ -15,6 +17,7 @@ class Mesh {
              unsigned int processor=0);
 
         void print(std::ostream &out=std::cout) const;
+        Pair_UI_UI getElementAdjacency() const;
         void partitionMesh(const unsigned int nPartitions);
 
     private:

@@ -16,19 +16,6 @@ Mesh::Mesh(const std::vector<float> &minVerts,
     this->generateVertices(minVerts, maxVerts, nCells);
     this->generateElements(nCells);
 
-    unsigned int index = 0;
-    printf("========================\n");
-    printf("Neighbors\n");
-    printf("========================\n");
-    for (const auto e : this->elements){
-        printf("Neighbors[%2d]: ", index );
-        for (const auto n : e->getNeighbors()){
-            auto it = std::find(this->elements.begin(), this->elements.end(), n);
-            printf("%4d", int(it - this->elements.begin() ));
-        }
-        printf("\n");
-        index++;
-    }
 }
 
 void Mesh::generateVertices(const std::vector<float> &minVerts,
@@ -268,6 +255,36 @@ void Mesh::print(std::ostream &out) const {
     indent = decreaseIndent(indent);
     out << indent << "</VTKFile>" << std::endl;
 
+}
+
+
+Pair_UI_UI Mesh::getElementAdjacency() const{    
+    // First of pair contains indices, Second contains compressed values
+    Pair_UI_UI result;
+    result.first.reserve(this->elements.size()+1);
+    result.second.reserve(this->elements.size() * pow(2, this->dimension-1)); // Conservative reservation
+
+    result.first.push_back(0);
+    for (const auto e : this->elements){
+        for (const auto n : e->getNeighbors()){
+            auto it = std::find(this->elements.begin(), this->elements.end(), n);
+            result.second.push_back( int(it - this->elements.begin()) );
+        }
+        unsigned int nNeighbors = e->numNeighbors();
+        result.first.push_back( result.first.back() + nNeighbors );
+    }
+
+    // printf("========================\n");
+    // printf("Neighbors\n");
+    // printf("========================\n");
+    // for (unsigned int j = 0; j < result.first.size()-1; j++){
+    //     printf("Neighbors[%2d]: ", j );
+    //     for (unsigned int i = result.first[j]; i < result.first[j+1]; i++)
+    //         printf("%4d", result.second[i]);
+    //     printf("\n");
+    // }
+
+    return result;
 }
 
 void Mesh::partitionMesh(const unsigned int nParts){
