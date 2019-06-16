@@ -19,6 +19,7 @@ class Element {
         unsigned int numBoundaryNodes() const;
         std::vector<std::shared_ptr<Node>> getBoundaryNodes() const;
 
+        std::vector<std::shared_ptr<Node>> getSharedVertices(std::shared_ptr<Element>) const;
         bool isNeighborElement(std::shared_ptr<Element>);
         void addNeighborElement(std::shared_ptr<Element>);
         void removeNeighborElement(std::shared_ptr<Element>);

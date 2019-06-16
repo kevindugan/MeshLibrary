@@ -76,7 +76,7 @@ unsigned int Element::numFaceVertices() const {
     return pow(2, this->dimension-1);
 }
 
-bool Element::isNeighborElement(std::shared_ptr<Element> other){
+std::vector<std::shared_ptr<Node>> Element::getSharedVertices(std::shared_ptr<Element> other) const {
     auto otherVert = other->getVertices();
     auto myVert = this->vertices;
     assert (otherVert.size() == myVert.size());
@@ -92,8 +92,11 @@ bool Element::isNeighborElement(std::shared_ptr<Element> other){
                                     intersection.begin(), ptr_lt<Node>);
 
     intersection.resize(it - intersection.begin());
+    return intersection;
+}
 
-    return intersection.size() == this->numFaceVertices();
+bool Element::isNeighborElement(std::shared_ptr<Element> other){
+    return this->getSharedVertices(other).size() == this->numFaceVertices();
 }
 
 void Element::addNeighborElement(std::shared_ptr<Element> other){

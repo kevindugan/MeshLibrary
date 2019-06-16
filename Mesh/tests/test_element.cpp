@@ -7,6 +7,8 @@
 #  define DebugTestName(testName) DISABLED_ ## testName
 #endif
 
+using ::testing::ElementsAreArray;
+
 TEST(DebugTestName(MeshLib_Element), constructor){
 
     std::vector<std::shared_ptr<Node>> vertices1;
@@ -257,6 +259,43 @@ TEST(MeshLib_Element, check_neighbor_2d){
     EXPECT_FALSE( elem3.isNeighborElement(std::make_shared<Element>(elem4)) );
 }
 
+TEST(MeshLib_Element, shared_vertices_2d){
+    
+    std::vector<std::shared_ptr<Node>> vert;
+    vert.push_back( std::make_shared<Node>(Node(2, {0.0, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.1, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.2, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.3, 0.0})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.0, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.1, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.2, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.3, 0.1})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.0, 0.2})) );
+    vert.push_back( std::make_shared<Node>(Node(2, {0.1, 0.2})) );
+
+    Element elem1(2, {vert[0], vert[1], vert[5], vert[4]});
+    Element elem2(2, {vert[1], vert[2], vert[6], vert[5]});
+    Element elem4(2, {vert[4], vert[5], vert[9], vert[8]});
+
+    Element elem3(2, {vert[2], vert[3], vert[7], vert[6]});
+
+    // Two shared nodes
+    EXPECT_THAT(elem1.getSharedVertices(std::make_shared<Element>(elem4)), ElementsAreArray({vert[4], vert[5]}));
+    EXPECT_THAT(elem4.getSharedVertices(std::make_shared<Element>(elem1)), ElementsAreArray({vert[4], vert[5]}));
+    EXPECT_THAT(elem1.getSharedVertices(std::make_shared<Element>(elem2)), ElementsAreArray({vert[1], vert[5]}));
+    EXPECT_THAT(elem2.getSharedVertices(std::make_shared<Element>(elem1)), ElementsAreArray({vert[1], vert[5]}));
+
+    // Shares 1 node
+    EXPECT_THAT(elem2.getSharedVertices(std::make_shared<Element>(elem4)), ElementsAreArray({vert[5]}));
+    EXPECT_THAT(elem4.getSharedVertices(std::make_shared<Element>(elem2)), ElementsAreArray({vert[5]}));
+
+    // Shares no nodes
+    EXPECT_EQ(elem1.getSharedVertices(std::make_shared<Element>(elem3)).size(), 0);
+    EXPECT_EQ(elem3.getSharedVertices(std::make_shared<Element>(elem1)).size(), 0);
+    EXPECT_EQ(elem4.getSharedVertices(std::make_shared<Element>(elem3)).size(), 0);
+    EXPECT_EQ(elem3.getSharedVertices(std::make_shared<Element>(elem4)).size(), 0);
+}
+
 TEST(MeshLib_Element, check_neighbor_3d){
     
     std::vector<std::shared_ptr<Node>> vert;
@@ -308,4 +347,57 @@ TEST(MeshLib_Element, check_neighbor_3d){
     ASSERT_FALSE( elem1.isNeighborElement(std::make_shared<Element>(elem4)) );
     ASSERT_FALSE( elem4.isNeighborElement(std::make_shared<Element>(elem1)) );
 
+}
+
+TEST(MeshLib_Element, shared_vertices_3d){
+    
+    std::vector<std::shared_ptr<Node>> vert;
+    vert.push_back( std::make_shared<Node>(Node(3, {0.0, 0.0, 0.0})) ); // 0
+    vert.push_back( std::make_shared<Node>(Node(3, {0.1, 0.0, 0.0})) ); // 1
+    vert.push_back( std::make_shared<Node>(Node(3, {0.2, 0.0, 0.0})) ); // 2
+
+    vert.push_back( std::make_shared<Node>(Node(3, {0.0, 0.1, 0.0})) ); // 3
+    vert.push_back( std::make_shared<Node>(Node(3, {0.1, 0.1, 0.0})) ); // 4
+    vert.push_back( std::make_shared<Node>(Node(3, {0.2, 0.1, 0.0})) ); // 5
+    
+    vert.push_back( std::make_shared<Node>(Node(3, {0.0, 0.0, 0.1})) ); // 6
+    vert.push_back( std::make_shared<Node>(Node(3, {0.1, 0.0, 0.1})) ); // 7
+    vert.push_back( std::make_shared<Node>(Node(3, {0.2, 0.0, 0.1})) ); // 8
+
+    vert.push_back( std::make_shared<Node>(Node(3, {0.0, 0.1, 0.1})) ); // 9
+    vert.push_back( std::make_shared<Node>(Node(3, {0.1, 0.1, 0.1})) ); // 10
+    vert.push_back( std::make_shared<Node>(Node(3, {0.2, 0.1, 0.1})) ); // 11
+
+    vert.push_back( std::make_shared<Node>(Node(3, {0.1, 0.2, 0.1})) ); // 12
+    vert.push_back( std::make_shared<Node>(Node(3, {0.2, 0.2, 0.1})) ); // 13
+    vert.push_back( std::make_shared<Node>(Node(3, {0.1, 0.1, 0.2})) ); // 14
+    vert.push_back( std::make_shared<Node>(Node(3, {0.2, 0.1, 0.2})) ); // 15
+    vert.push_back( std::make_shared<Node>(Node(3, {0.1, 0.2, 0.2})) ); // 16
+    vert.push_back( std::make_shared<Node>(Node(3, {0.2, 0.2, 0.2})) ); // 17
+
+    vert.push_back( std::make_shared<Node>(Node(3, {0.3, 0.0, 0.0})) ); // 18
+    vert.push_back( std::make_shared<Node>(Node(3, {0.3, 0.1, 0.0})) ); // 19
+    vert.push_back( std::make_shared<Node>(Node(3, {0.3, 0.0, 0.1})) ); // 20
+    vert.push_back( std::make_shared<Node>(Node(3, {0.3, 0.1, 0.1})) ); // 21
+
+    Element elem1(3, { vert[0],  vert[1],  vert[4],  vert[3],  vert[6],  vert[7], vert[10],  vert[9]});
+    Element elem2(3, { vert[1],  vert[2],  vert[5],  vert[4],  vert[7],  vert[8], vert[11], vert[10]});
+    Element elem3(3, {vert[10], vert[11], vert[12], vert[13], vert[14], vert[15], vert[16], vert[17]});
+    Element elem4(3, { vert[2], vert[18], vert[19],  vert[5],  vert[8], vert[20], vert[11], vert[21]});
+
+    // Shares 4 nodes
+    EXPECT_THAT( elem1.getSharedVertices(std::make_shared<Element>(elem2)), ElementsAreArray({vert[1], vert[7], vert[4], vert[10]}));
+    EXPECT_THAT( elem2.getSharedVertices(std::make_shared<Element>(elem1)), ElementsAreArray({vert[1], vert[7], vert[4], vert[10]}));
+
+    // Shares 2 nodes
+    EXPECT_THAT( elem2.getSharedVertices(std::make_shared<Element>(elem3)), ElementsAreArray({vert[10], vert[11]}));
+    EXPECT_THAT( elem3.getSharedVertices(std::make_shared<Element>(elem2)), ElementsAreArray({vert[10], vert[11]}));
+
+    // Shares 1 node
+    EXPECT_THAT( elem1.getSharedVertices(std::make_shared<Element>(elem3)), ElementsAreArray({vert[10]}));
+    EXPECT_THAT( elem3.getSharedVertices(std::make_shared<Element>(elem1)), ElementsAreArray({vert[10]}));
+
+    // Shares no nodes
+    EXPECT_EQ( elem1.getSharedVertices(std::make_shared<Element>(elem4)).size(), 0);
+    EXPECT_EQ( elem4.getSharedVertices(std::make_shared<Element>(elem1)).size(), 0);
 }
