@@ -14,7 +14,22 @@ before_script:
   - sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
 
 script:
-  - mkdir build && cd build
+  - mkdir {build,build-debug,build-release}
+  # Standard Build
+  - pushd build
   - cmake ..
   - make
   - ctest -VV
+  - popd
+  # Debug Build
+  - pushd build-debug
+  - cmake .. -DCMAKE_BUILD_TYPE:STRING=Debug
+  - make
+  - ctest -VV
+  - popd
+  # Release Build
+  - pushd build-release
+  - cmake .. -DCMAKE_BUILD_TYPE:STRING=Release
+  - make
+  - ctest -VV
+  - popd
