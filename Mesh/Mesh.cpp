@@ -354,3 +354,43 @@ void Mesh::partitionMesh(const unsigned int nParts_in){
     auto duration = duration_cast<seconds>(high_resolution_clock::now() - start);
     printf("Partitioning Elapsed Time: %4ds\n", int(duration.count()));
 }
+
+void Mesh::findRingNodes() {
+    auto it = std::max_element(this->partition.begin(), this->partition.end());
+    unsigned int nPartitions = *it + 1;
+    printf("Number of Partitions: %4d\n", nPartitions);
+
+    // Use temporary node indices
+    this->ringNodeIndices.resize(nPartitions);
+    unsigned int index = 0;
+    for (const auto e : this->elements){
+        unsigned int thisProcessor = this->partition[index];
+        for (const auto n : e->getNeighbors()){
+            auto it = std::find(this->elements.begin(), this->elements.end(), n);
+            unsigned int neighborIndex = int(it - this->elements.begin());
+            unsigned int neighborProcessor = this->partition[neighborIndex];
+            if (neighborProcessor != thisProcessor){
+                // printf("ThisElement: %4d, Neighbor: %4d\n", index, neighborIndex);
+                auto sharedVerts = e->getSharedVertices(*it);
+                std::vector<unsigned int> sharedIndices;
+                sharedIndices.reserve(sharedVerts.size());
+                for (const auto v : sharedVerts){
+                    auto nodeIt = std::find(this->vertices.begin(), this->vertices.end(), v);
+                    sharedIndices.push_back( int( nodeIt - this->vertices.begin() ) );
+                }
+                auto nodeEnd = this->ringNodeIndices[thisProcessor].end();
+                this->ringNodeIndices[thisProcessor].insert(nodeEnd, sharedIndices.begin(), sharedIndices.end());
+            }
+        }
+        index++;
+    }
+
+    // Sort and get unique indices
+    index = 0;
+    for (auto &proc : this->ringNodeIndices){
+        std::sort(proc.begin(), proc.end());
+        auto it = std::unique(proc.begin(), proc.end());
+        proc.resize( std::distance(proc.begin(), it) );
+        index++;
+    }
+}

@@ -21,12 +21,20 @@ class Mesh {
         Pair_UI_UI getElementAdjacency() const;
         void partitionMesh(const unsigned int nPartitions);
 
+        std::vector<unsigned int> getPartition() const {return partition;}
+        void setPartition(const std::vector<unsigned int> &other) {partition = other;}
+        std::vector<std::shared_ptr<Node>> getVertices() const {return vertices;}
+
+        void findRingNodes();
+        std::vector<unsigned int> getRingNodes(const unsigned int i) const {return ringNodeIndices[i];}
+
     private:
         unsigned int dimension, owningProcessor;
         std::vector<unsigned int> partition;
         std::vector<std::shared_ptr<Node>> vertices;
         std::vector<std::shared_ptr<Element>> elements;
         std::vector<std::vector<unsigned int>> elementConnectivity;
+        std::vector<std::vector<unsigned int>> ringNodeIndices;
 
         void generateVertices(const std::vector<float> &minVerts,
                               const std::vector<float> &maxVerts,

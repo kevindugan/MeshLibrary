@@ -186,3 +186,47 @@ TEST(MeshLib_Mesh, partition){
     cart2.print(output3d);
     output3d.close();
 }
+
+TEST(MeshLib_Mesh, get_ring_nodes){
+    Mesh cart({0.0, 0.0},
+              {1.0, 1.0},
+              {11, 8});
+
+    // cart.partitionMesh(5);
+    // printf("{");
+    // for (const auto e : cart.getPartition()){
+    //     printf("%2d,", e);
+    // }
+    // printf("};\n");
+
+    // std::ofstream out("outputRind.vtu", std::ofstream::out);
+    // cart.print(out);
+    // out.close();
+
+    std::vector<unsigned int> partition = { 1, 1, 1, 1, 2, 2, 2, 4, 4, 4, 4,
+                                            1, 1, 1, 1, 2, 2, 2, 4, 4, 4, 4,
+                                            1, 1, 1, 1, 2, 2, 2, 4, 4, 4, 4,
+                                            1, 1, 1, 1, 2, 2, 2, 4, 4, 4, 4,
+                                            1, 1, 0, 0, 2, 2, 2, 3, 3, 4, 4,
+                                            0, 0, 0, 0, 0, 2, 2, 3, 3, 3, 3,
+                                            0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3,
+                                            0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3};
+
+    std::vector<std::vector<unsigned int>> ExpectedRings = 
+                                           {{50, 51, 52, 60, 61, 62, 64, 65, 77, 89, 101},
+                                            {4, 16, 28, 40, 50, 51, 52, 60, 61, 62},
+                                            {4, 7, 16, 19, 28, 31, 40, 43, 52, 55, 64, 65, 67, 77, 78, 79},
+                                            {55, 56, 57, 67, 69, 70, 71, 77, 78, 79, 89, 101},
+                                            {7, 19, 31, 43, 55, 56, 57, 69, 70, 71}};
+
+    cart.setPartition(partition);
+
+    cart.findRingNodes();
+
+    unsigned int index = 0;
+    for (const auto partitionRing : ExpectedRings){
+        EXPECT_THAT(cart.getRingNodes(index), partitionRing);
+        index++;
+    }
+    
+}
