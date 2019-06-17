@@ -332,7 +332,7 @@ void Mesh::partitionMesh(const unsigned int nParts_in){
     idx_t objectiveValue;
     idx_t nParts = static_cast<idx_t>( nParts_in );
     std::vector<idx_t> METISpartition(this->elements.size());
-    unsigned int err = METIS_PartGraphRecursive(&nElements, &nConstraints,
+    unsigned int err = METIS_PartGraphKway(&nElements, &nConstraints,
                                                 adjacency.first.data(),
                                                 adjacency.second.data(),
                                                 NULL, NULL, NULL, &nParts, NULL,
