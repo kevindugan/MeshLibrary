@@ -16,6 +16,7 @@ struct testRingNodes {
     std::vector<unsigned int> neighborProcessIds;
 
     std::vector<unsigned int> ringNodeOwnership, ringNodeIndices;
+    std::vector<unsigned int> ownership;
 };
 
 int main(){
@@ -171,20 +172,38 @@ int main(){
 
         assert (proc.exp_ringNodeOwnership.size() == proc.ringNodeOwnership.size());
         assert (proc.exp_ringNodeIndex.size() == proc.ringNodeIndices.size());
-        // printf("Ownership\n");
-        // for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++)
-        //     printf("%4d --> %4d\n", proc.exp_ringNodeOwnership[i], proc.ringNodeOwnership[i]);
+        printf("Ownership\n");
+        for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++)
+            printf("%4d --> %4d\n", proc.exp_ringNodeOwnership[i], proc.ringNodeOwnership[i]);
         for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++){
             assert ( proc.exp_ringNodeOwnership[i] == proc.ringNodeOwnership[i] );
         }
-        // printf("Indices\n");
-        // for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++)
-        //     printf("%4d --> %4d\n", proc.exp_ringNodeIndex[i], proc.ringNodeIndices[i]);
+        printf("Indices\n");
+        for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++)
+            printf("%4d --> %4d\n", proc.exp_ringNodeIndex[i], proc.ringNodeIndices[i]);
         for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++){
             assert ( proc.exp_ringNodeIndex[i] == proc.ringNodeIndices[i] );
         }
     }
 
+    // Get Final Ownership
+    for (auto & proc : processorInfo){
+        proc.ownership.assign(proc.x.size(), proc.processorId);
+        unsigned int n = 0;
+        for (auto it = proc.ringNodeId.begin(); it != proc.ringNodeId.end(); it++ ){
+            proc.ownership[*it] = proc.ringNodeOwnership[n];
+            n++;
+        }
+        
+        assert(proc.ownership.size() == proc.exp_ownership.size());
+        printf("Proc %2d: ", proc.processorId);
+        for (const auto n : proc.ownership)
+            printf("%4d", n);
+        printf("\n");
+        
+        for (unsigned int i = 0; i < proc.exp_ownership.size(); i++)
+            assert( proc.ownership[i] == proc.exp_ownership[i] );
+    }
 
     return 0;
 }
