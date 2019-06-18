@@ -141,18 +141,18 @@ int main(){
                     break;
             }
         }
-        auto duration = duration_cast<milliseconds>(high_resolution_clock::now() - start);
-        printf("Rank %2d Elapsed: %dms\n", proc.processorId, int(duration.count()));
+        auto duration = duration_cast<seconds>(high_resolution_clock::now() - start);
+        printf("Rank %2d Elapsed: %ds\n", proc.processorId, int(duration.count()));
 
         assert (proc.exp_ringNodeOwnership.size() == proc.ringNodeOwnership.size());
         assert (proc.exp_ringNodeIndex.size() == proc.ringNodeIndices.size());
-        printf("Ownership\n");
+        // printf("Ownership\n");
         // for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++)
         //     printf("%4d --> %4d\n", proc.exp_ringNodeOwnership[i], proc.ringNodeOwnership[i]);
         for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++){
             assert ( proc.exp_ringNodeOwnership[i] == proc.ringNodeOwnership[i] );
         }
-        printf("Indices\n");
+        // printf("Indices\n");
         // for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++)
         //     printf("%4d --> %4d\n", proc.exp_ringNodeIndex[i], proc.ringNodeIndices[i]);
         for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++){
@@ -170,10 +170,10 @@ int main(){
         }
         
         assert(proc.ownership.size() == proc.exp_ownership.size());
-        printf("Proc %2d: ", proc.processorId);
-        for (const auto n : proc.ownership)
-            printf("%4d", n);
-        printf("\n");
+        // printf("Proc %2d: ", proc.processorId);
+        // for (const auto n : proc.ownership)
+        //     printf("%4d", n);
+        // printf("\n");
         
         for (unsigned int i = 0; i < proc.exp_ownership.size(); i++)
             assert( proc.ownership[i] == proc.exp_ownership[i] );
