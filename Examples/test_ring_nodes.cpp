@@ -173,9 +173,15 @@ int main(){
     }
     assert (exp_ringNodeOwnership0.size() == ringNodeOwnership0.size());
     assert (exp_ringNodeIndex0.size() == ringNodeIndices0.size());
+    // printf("Ownership\n");
+    // for (unsigned int i = 0; i < exp_ringNodeOwnership0.size(); i++)
+    //     printf("%4d --> %4d\n",exp_ringNodeOwnership0[i], ringNodeOwnership0[i]);
     for (unsigned int i = 0; i < exp_ringNodeOwnership0.size(); i++){
         assert ( exp_ringNodeOwnership0[i] == ringNodeOwnership0[i] );
     }
+    // printf("Indices\n");
+    // for (unsigned int i = 0; i < exp_ringNodeIndex0.size(); i++)
+    //     printf("%4d --> %4d\n",exp_ringNodeIndex0[i], ringNodeIndices0[i]);
     for (unsigned int i = 0; i < exp_ringNodeIndex0.size(); i++){
         assert ( exp_ringNodeIndex0[i] == ringNodeIndices0[i] );
     }
@@ -211,9 +217,13 @@ int main(){
     }
     assert (exp_ringNodeOwnership1.size() == ringNodeOwnership1.size());
     assert (exp_ringNodeIndex1.size() == ringNodeIndices1.size());
+    // printf("Ownership\n");
+    // for (unsigned int i = 0; i < exp_ringNodeOwnership1.size(); i++)
+    //     printf("%4d --> %4d\n",exp_ringNodeOwnership1[i], ringNodeOwnership1[i]);
     for (unsigned int i = 0; i < exp_ringNodeOwnership1.size(); i++){
         assert ( exp_ringNodeOwnership1[i] == ringNodeOwnership1[i] );
     }
+    // printf("Indices\n");
     // for (unsigned int i = 0; i < exp_ringNodeIndex1.size(); i++)
     //     printf("%4d --> %4d\n",exp_ringNodeIndex1[i], ringNodeIndices1[i]);
     for (unsigned int i = 0; i < exp_ringNodeIndex1.size(); i++){
@@ -251,9 +261,13 @@ int main(){
     }
     assert (exp_ringNodeOwnership2.size() == ringNodeOwnership2.size());
     assert (exp_ringNodeIndex2.size() == ringNodeIndices2.size());
+    // printf("Ownership\n");
+    // for (unsigned int i = 0; i < exp_ringNodeOwnership2.size(); i++)
+    //     printf("%4d --> %4d\n",exp_ringNodeOwnership2[i], ringNodeOwnership2[i]);
     for (unsigned int i = 0; i < exp_ringNodeOwnership2.size(); i++){
         assert ( exp_ringNodeOwnership2[i] == ringNodeOwnership2[i] );
     }
+    // printf("Indices\n");
     // for (unsigned int i = 0; i < exp_ringNodeIndex2.size(); i++)
     //     printf("%4d --> %4d\n",exp_ringNodeIndex2[i], ringNodeIndices2[i]);
     for (unsigned int i = 0; i < exp_ringNodeIndex2.size(); i++){
