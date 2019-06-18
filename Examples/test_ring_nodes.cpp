@@ -23,47 +23,21 @@ int main(){
 
     std::vector<testRingNodes> processorInfo;
 
-    // input
-    processorInfo.push_back(testRingNodes());
-    processorInfo[0].processorId = 0;
-    processorInfo[0].x = { 0.17,  0.17,  0.17,  0.33,  0.33,  0.33,   0.5,   0.5,  0.17,  0.17,  0.21,  0.29,  0.33,  0.33,  0.29,  0.21,  0.38,  0.45,   0.5,   0.5,  0.45,  0.38,  0.17,  0.17,  0.21,  0.29,  0.33,  0.33,  0.21,  0.21,  0.29,  0.29,  0.38,  0.38,  0.45,  0.45,  0.21,  0.21,  0.29,  0.29, };
-    processorInfo[0].y = {-0.33, -0.17,     0, -0.33, -0.17,     0, -0.17,     0, -0.046, -0.12, -0.17, -0.17, -0.12, -0.046,     0,     0, -0.17, -0.17, -0.12, -0.046,     0,     0, -0.21, -0.29, -0.33, -0.33, -0.29, -0.21, -0.046, -0.12, -0.046, -0.12, -0.046, -0.12, -0.046, -0.12, -0.21, -0.29, -0.21, -0.29, };
-    processorInfo[0].z = {    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, };
-    processorInfo[0].interiorNodeId = {    5,     7,    10,    11,    12,    13,    14,    15,    18,    19,    20,    21,    28,    29,    30,    31,    32,    33,    34,    35,    36,    37,    38,    39, };
-    processorInfo[0].ringNodeId =     {    0,     1,     2,     3,     4,     6,     8,     9,    16,    17,    22,    23,    24,    25,    26,    27, };
-
-    // output
-    processorInfo[0].exp_ringNodeOwnership = {    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, };
-    processorInfo[0].exp_ringNodeIndex =     {    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, };
-    processorInfo[0].exp_ownership =         {    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, };
-
-    // input
-    processorInfo.push_back(testRingNodes());
-    processorInfo[1].processorId = 1;
-    processorInfo[1].x = {    0,     0,     0,     0,  0.17,  0.17,  0.17,  0.17,     0,     0, 0.046,  0.12,  0.17,  0.17,  0.12, 0.046,     0,     0, 0.046,  0.12,  0.17,  0.17,     0,     0, 0.046,  0.12,  0.17,  0.17, 0.046, 0.046,  0.12,  0.12, 0.046, 0.046,  0.12,  0.12, 0.046, 0.046,  0.12,  0.12, };
-    processorInfo[1].y = { -0.5, -0.33, -0.17,     0,  -0.5, -0.33, -0.17,     0, -0.046, -0.12, -0.17, -0.17, -0.12, -0.046,     0,     0, -0.21, -0.29, -0.33, -0.33, -0.29, -0.21, -0.38, -0.45,  -0.5,  -0.5, -0.45, -0.38, -0.046, -0.12, -0.046, -0.12, -0.21, -0.29, -0.21, -0.29, -0.38, -0.45, -0.38, -0.45, };
-    processorInfo[1].z = {    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, };
-    processorInfo[1].interiorNodeId = {    0,     1,     2,     3,     8,     9,    10,    11,    14,    15,    16,    17,    18,    19,    22,    23,    24,    25,    28,    29,    30,    31,    32,    33,    34,    35,    36,    37,    38,    39, };
-    processorInfo[1].ringNodeId =     {    4,     5,     6,     7,    12,    13,    20,    21,    26,    27, };
-
-    // output
-    processorInfo[1].exp_ringNodeOwnership = {    1,     0,     0,     0,     0,     0,     0,     0,     1,     1, };
-    processorInfo[1].exp_ringNodeIndex =     {    0,     0,     1,     2,     7,     6,    11,    10,     0,     0, };
-    processorInfo[1].exp_ownership =         {    1,     1,     1,     1,     1,     0,     0,     0,     1,     1,     1,     1,     0,     0,     1,     1,     1,     1,     1,     1,     0,     0,     1,     1,     1,     1,     1,     1,     1,     1,     1,     1,     1,     1,     1,     1,     1,     1,     1,     1, };
-
-    // input
-    processorInfo.push_back(testRingNodes());
-    processorInfo[2].processorId = 2;
-    processorInfo[2].x = { 0.17,  0.17,  0.33,  0.33,  0.33,   0.5,   0.5,   0.5,  0.33,  0.33,  0.38,  0.45,   0.5,   0.5,  0.45,  0.38,  0.17,  0.17,  0.21,  0.29,  0.33,  0.33,  0.29,  0.21,  0.38,  0.45,   0.5,   0.5,  0.38,  0.38,  0.45,  0.45,  0.21,  0.21,  0.29,  0.29,  0.38,  0.38,  0.45,  0.45, };
-    processorInfo[2].y = { -0.5, -0.33,  -0.5, -0.33, -0.17,  -0.5, -0.33, -0.17, -0.21, -0.29, -0.33, -0.33, -0.29, -0.21, -0.17, -0.17, -0.38, -0.45,  -0.5,  -0.5, -0.45, -0.38, -0.33, -0.33,  -0.5,  -0.5, -0.45, -0.38, -0.21, -0.29, -0.21, -0.29, -0.38, -0.45, -0.38, -0.45, -0.38, -0.45, -0.38, -0.45, };
-    processorInfo[2].z = {    0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, };
-    processorInfo[2].interiorNodeId = {    2,     5,     6,    10,    11,    12,    13,    18,    19,    20,    21,    24,    25,    26,    27,    28,    29,    30,    31,    32,    33,    34,    35,    36,    37,    38,    39, };
-    processorInfo[2].ringNodeId =     {    0,     1,     3,     4,     7,     8,     9,    14,    15,    16,    17,    22,    23, };
-
-    // output
-    processorInfo[2].exp_ringNodeOwnership = {    1,     0,     0,     0,     0,     0,     0,     0,     0,     1,     1,     0,     0, };
-    processorInfo[2].exp_ringNodeIndex =     {    0,     0,     3,     4,     5,    15,    14,     9,     8,     9,     8,    13,    12, };
-    processorInfo[2].exp_ownership =         {    1,     0,     2,     0,     0,     2,     2,     0,     0,     0,     2,     2,     2,     2,     0,     0,     1,     1,     2,     2,     2,     2,     0,     0,     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,     2,     2, };
+    #define TWO_DIMENSIONAL
+    #ifdef TWO_DIMENSIONAL
+        #include "ringNodeData/processor2d-0.out"
+        #include "ringNodeData/processor2d-1.out"
+        #include "ringNodeData/processor2d-2.out"
+    #else
+        #include "ringNodeData/processor3d-0.out"
+        #include "ringNodeData/processor3d-1.out"
+        #include "ringNodeData/processor3d-2.out"
+        #include "ringNodeData/processor3d-3.out"
+        #include "ringNodeData/processor3d-4.out"
+        #include "ringNodeData/processor3d-5.out"
+        #include "ringNodeData/processor3d-6.out"
+        #include "ringNodeData/processor3d-7.out"
+    #endif
 
     // Neighbor process ids
     std::vector<unsigned int> neighborIds;
@@ -114,30 +88,30 @@ int main(){
         }
     }
 
-    unsigned int procIndex = 0;
-    for (const auto &proc : processorInfo){
-        printf("Ring Nodes%d: ", procIndex);
-        for (const auto vertex : proc.ringNodes){
-            auto coords = vertex.getCoords();
-            printf("(%5.2f, %5.2f) ", coords[0], coords[1]);
-        }
-        printf("\n");
-        procIndex++;
-    }
-    procIndex = 0;
-    for (const auto &proc : processorInfo){
-        unsigned int index = 0;
-        for (const auto &neighbor : proc.neighborRingNodes){
-            printf("Neighbor%d[%2d]: ", procIndex, index);
-            for (const auto vertex : neighbor){
-                auto coords = vertex.getCoords();
-                printf("(%5.2f, %5.2f) ", coords[0], coords[1]);
-            }
-            printf("\n");
-            index++;
-        }
-        procIndex++;
-    }
+    // unsigned int procIndex = 0;
+    // for (const auto &proc : processorInfo){
+    //     printf("Ring Nodes%d: ", procIndex);
+    //     for (const auto vertex : proc.ringNodes){
+    //         auto coords = vertex.getCoords();
+    //         printf("(%5.2f, %5.2f) ", coords[0], coords[1]);
+    //     }
+    //     printf("\n");
+    //     procIndex++;
+    // }
+    // procIndex = 0;
+    // for (const auto &proc : processorInfo){
+    //     unsigned int index = 0;
+    //     for (const auto &neighbor : proc.neighborRingNodes){
+    //         printf("Neighbor%d[%2d]: ", procIndex, index);
+    //         for (const auto vertex : neighbor){
+    //             auto coords = vertex.getCoords();
+    //             printf("(%5.2f, %5.2f) ", coords[0], coords[1]);
+    //         }
+    //         printf("\n");
+    //         index++;
+    //     }
+    //     procIndex++;
+    // }
 
     //===================================================================
     // Original Algo
@@ -173,14 +147,14 @@ int main(){
         assert (proc.exp_ringNodeOwnership.size() == proc.ringNodeOwnership.size());
         assert (proc.exp_ringNodeIndex.size() == proc.ringNodeIndices.size());
         printf("Ownership\n");
-        for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++)
-            printf("%4d --> %4d\n", proc.exp_ringNodeOwnership[i], proc.ringNodeOwnership[i]);
+        // for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++)
+        //     printf("%4d --> %4d\n", proc.exp_ringNodeOwnership[i], proc.ringNodeOwnership[i]);
         for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++){
             assert ( proc.exp_ringNodeOwnership[i] == proc.ringNodeOwnership[i] );
         }
         printf("Indices\n");
-        for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++)
-            printf("%4d --> %4d\n", proc.exp_ringNodeIndex[i], proc.ringNodeIndices[i]);
+        // for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++)
+        //     printf("%4d --> %4d\n", proc.exp_ringNodeIndex[i], proc.ringNodeIndices[i]);
         for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++){
             assert ( proc.exp_ringNodeIndex[i] == proc.ringNodeIndices[i] );
         }
@@ -204,6 +178,8 @@ int main(){
         for (unsigned int i = 0; i < proc.exp_ownership.size(); i++)
             assert( proc.ownership[i] == proc.exp_ownership[i] );
     }
+
+    printf("I--Test Passed\n");
 
     return 0;
 }
