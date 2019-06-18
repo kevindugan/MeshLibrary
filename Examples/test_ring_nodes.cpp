@@ -8,7 +8,8 @@ using namespace std::chrono;
 struct testRingNodes {
     unsigned int processorId;
     std::vector<float> x, y, z;
-    std::set<unsigned int> interiorNodeId, ringNodeId;
+    std::set<unsigned int> interiorNodeId_set, ringNodeId_set;
+    std::vector<unsigned int> interiorNodeId, ringNodeId;
     std::vector<unsigned int> exp_ringNodeOwnership, exp_ringNodeIndex, exp_ownership;
 
     std::vector<Node> ringNodes;
@@ -24,19 +25,37 @@ int main(){
     std::vector<testRingNodes> processorInfo;
 
     #define TWO_DIMENSIONAL
+    #define SMALL
     #ifdef TWO_DIMENSIONAL
-        #include "ringNodeData/processor2d-0.out"
-        #include "ringNodeData/processor2d-1.out"
-        #include "ringNodeData/processor2d-2.out"
+        #ifdef LARGE
+            #include "ringNodeData/processor2d_large-0.out"
+            #include "ringNodeData/processor2d_large-1.out"
+            #include "ringNodeData/processor2d_large-2.out"
+            #include "ringNodeData/processor2d_large-3.out"
+            #include "ringNodeData/processor2d_large-4.out"
+            #include "ringNodeData/processor2d_large-5.out"
+            #include "ringNodeData/processor2d_large-6.out"
+            #include "ringNodeData/processor2d_large-7.out"
+        #else
+            #include "ringNodeData/processor2d_small-0.out"
+            #include "ringNodeData/processor2d_small-1.out"
+            #include "ringNodeData/processor2d_small-2.out"
+        #endif
     #else
-        #include "ringNodeData/processor3d-0.out"
-        #include "ringNodeData/processor3d-1.out"
-        #include "ringNodeData/processor3d-2.out"
-        #include "ringNodeData/processor3d-3.out"
-        #include "ringNodeData/processor3d-4.out"
-        #include "ringNodeData/processor3d-5.out"
-        #include "ringNodeData/processor3d-6.out"
-        #include "ringNodeData/processor3d-7.out"
+        #ifdef LARGE
+            #include "ringNodeData/processor3d_large-0.out"
+            #include "ringNodeData/processor3d_large-1.out"
+            #include "ringNodeData/processor3d_large-2.out"
+            #include "ringNodeData/processor3d_large-3.out"
+            #include "ringNodeData/processor3d_large-4.out"
+            #include "ringNodeData/processor3d_large-5.out"
+            #include "ringNodeData/processor3d_large-6.out"
+            #include "ringNodeData/processor3d_large-7.out"
+        #else
+            #include "ringNodeData/processor3d_small-0.out"
+            #include "ringNodeData/processor3d_small-1.out"
+            #include "ringNodeData/processor3d_small-2.out"
+        #endif
     #endif
 
     // Neighbor process ids
@@ -56,7 +75,7 @@ int main(){
     for (const auto &proc : processorInfo)
         printf("Size: x = %4d, y = %4d, z = %4d\n", int(proc.x.size()), int(proc.y.size()), int(proc.z.size()));
     for (const auto &proc : processorInfo)
-        printf("Size: intNodeId = %4d, ringNodeId = %4d, sum = %4d\n", int(proc.interiorNodeId.size()), int(proc.ringNodeId.size()), (int(proc.interiorNodeId.size()) + int(proc.ringNodeId.size())));
+        printf("Size: intNodeId = %4d, ringNodeId = %4d, sum = %4d\n", int(proc.interiorNodeId_set.size()), int(proc.ringNodeId_set.size()), (int(proc.interiorNodeId_set.size()) + int(proc.ringNodeId_set.size())));
     for (const auto &proc : processorInfo)
         printf("Size: ringOwner = %4d, ringNodeInd = %4d, ownwership = %4d\n", int(proc.exp_ringNodeOwnership.size()), int(proc.exp_ringNodeIndex.size()), int(proc.exp_ownership.size()));
     for (const auto &proc :processorInfo){
@@ -66,6 +85,20 @@ int main(){
         printf("\n");
     }
 
+    // Copy node id sets to vectors
+    for (auto &proc: processorInfo){
+        proc.interiorNodeId.reserve(proc.interiorNodeId_set.size());
+        proc.interiorNodeId.insert(proc.interiorNodeId.begin(), proc.interiorNodeId_set.begin(), proc.interiorNodeId_set.end());
+        proc.ringNodeId.reserve(proc.ringNodeId_set.size());
+        proc.ringNodeId.insert(proc.ringNodeId.begin(), proc.ringNodeId_set.begin(), proc.ringNodeId_set.end());
+    }
+
+    // for (const auto &proc : processorInfo){
+    //     printf("RingIndices[%2d]: ",proc.processorId);
+    //     for (const auto n : proc.ringNodeId)
+    //         printf("%4d",n);
+    //     printf("\n");
+    // }
 
     // Setup Ring nodes
     for (auto &proc : processorInfo){
