@@ -10,7 +10,7 @@ struct testRingNodes {
     std::vector<float> x, y, z;
     std::set<unsigned int> interiorNodeId_set, ringNodeId_set;
     std::vector<unsigned int> interiorNodeId, ringNodeId;
-    std::vector<unsigned int> exp_ringNodeOwnership, exp_ringNodeIndex, exp_ownership;
+    std::vector<unsigned int> exp_ringNodeOwnership, exp_ringNodeIndex, exp_ownership, exp_mapping;
 
     std::vector<Node> ringNodes;
     std::vector<std::vector<Node>> neighborRingNodes;
@@ -93,12 +93,26 @@ int main(){
         proc.ringNodeId.insert(proc.ringNodeId.begin(), proc.ringNodeId_set.begin(), proc.ringNodeId_set.end());
     }
 
-    // for (const auto &proc : processorInfo){
-    //     printf("RingIndices[%2d]: ",proc.processorId);
-    //     for (const auto n : proc.ringNodeId)
-    //         printf("%4d",n);
-    //     printf("\n");
+    // for (auto &proc : processorInfo){
+    //     auto nodeComp = [&](const unsigned int left, const unsigned int right){
+    //         std::vector<float> left_vec  = {proc.x[left],  proc.y[left],  proc.z[left]};
+    //         std::vector<float> right_vec = {proc.x[right], proc.y[right], proc.z[right]};
+    //         return left_vec < right_vec;
+    //     };
+    //     std::sort(proc.interiorNodeId.begin(), proc.interiorNodeId.end(), nodeComp);
+    //     std::sort(proc.ringNodeId.begin(), proc.ringNodeId.end(), nodeComp);
     // }
+
+    for (const auto &proc : processorInfo){
+        printf("RingIndices[%2d]: ",proc.processorId);
+        for (const auto n : proc.ringNodeId)
+            printf("%4d",n);
+        printf("\n");
+        printf("InteIndices[%2d]: ",proc.processorId);
+        for (const auto n : proc.interiorNodeId)
+            printf("%4d",n);
+        printf("\n");
+    }
 
     // Setup Ring nodes
     for (auto &proc : processorInfo){
@@ -174,6 +188,7 @@ int main(){
                     break;
             }
         }
+
         auto duration = duration_cast<seconds>(high_resolution_clock::now() - start);
         printf("Rank %2d Elapsed: %ds\n", proc.processorId, int(duration.count()));
 
@@ -182,15 +197,15 @@ int main(){
         // printf("Ownership\n");
         // for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++)
         //     printf("%4d --> %4d\n", proc.exp_ringNodeOwnership[i], proc.ringNodeOwnership[i]);
-        for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++){
-            assert ( proc.exp_ringNodeOwnership[i] == proc.ringNodeOwnership[i] );
-        }
+        // for (unsigned int i = 0; i < proc.exp_ringNodeOwnership.size(); i++){
+        //     assert ( proc.exp_ringNodeOwnership[i] == proc.ringNodeOwnership[i] );
+        // }
         // printf("Indices\n");
         // for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++)
         //     printf("%4d --> %4d\n", proc.exp_ringNodeIndex[i], proc.ringNodeIndices[i]);
-        for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++){
-            assert ( proc.exp_ringNodeIndex[i] == proc.ringNodeIndices[i] );
-        }
+        // for (unsigned int i = 0; i < proc.exp_ringNodeIndex.size(); i++){
+        //     assert ( proc.exp_ringNodeIndex[i] == proc.ringNodeIndices[i] );
+        // }
     }
 
     // Get Final Ownership
@@ -203,13 +218,21 @@ int main(){
         }
         
         assert(proc.ownership.size() == proc.exp_ownership.size());
-        // printf("Proc %2d: ", proc.processorId);
-        // for (const auto n : proc.ownership)
-        //     printf("%4d", n);
-        // printf("\n");
+        printf("ProcOwn %2d: ", proc.processorId);
+        for (const auto n : proc.ownership)
+            printf("%4d", n);
+        printf("\n");
         
         for (unsigned int i = 0; i < proc.exp_ownership.size(); i++)
             assert( proc.ownership[i] == proc.exp_ownership[i] );
+    }
+
+    // Get Final Mapping
+    for (auto &proc : processorInfo){
+        printf("ProcMap %2d: ", proc.processorId);
+        for (const auto n : proc.exp_mapping)
+            printf("%4d", n);
+        printf("\n");
     }
 
     printf("I--Test Passed\n");
