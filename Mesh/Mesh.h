@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <chrono>
 #include "metis.h"
+#include <bitset>
 
 using Pair_UI_UI = std::pair<std::vector<unsigned int>, std::vector<unsigned int>>;
 
@@ -18,6 +19,8 @@ class Mesh {
              unsigned int processor=0);
 
         void print(std::ostream &out=std::cout) const;
+        void outputVTK(std::ostream &out=std::cout) const;
+        
         Pair_UI_UI getElementAdjacency() const;
         void partitionMesh(const unsigned int nPartitions);
 
@@ -27,6 +30,38 @@ class Mesh {
 
         void findRingNodes();
         std::vector<unsigned int> getRingNodes(const unsigned int i) const {return ringNodeIndices[i];}
+
+        static std::string base64_encode(const std::vector<unsigned int> &vals){
+            std::string b64_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+            std::string bit_string = "";
+            bit_string.reserve(32 * vals.size());
+            for (const auto item : vals)
+                bit_string += std::bitset<32>(item).to_string();
+
+            std::string result = "";
+            for (unsigned int bit_index = 0; bit_index < bit_string.size(); bit_index += 24){
+                std::string block_bit_value = bit_string.substr(bit_index, 24);
+                // block_bit_value.append(6 - block_bit_value.size(), '0');
+                // std::cout << block_bit_value.c_str() << std::endl;
+
+                for (unsigned int i = 0; i < 24; i+=6){
+                    if (block_bit_value.size() < i)
+                        break;
+                    std::string chunk_bit_value = block_bit_value.substr(i, 6);
+                    chunk_bit_value.append(6-chunk_bit_value.size(), '0');
+                    // std::cout << chunk_bit_value.c_str() << std::endl;
+
+                    unsigned int table_index = std::bitset<6>(chunk_bit_value).to_ulong();
+                    // std::cout << table_index << std::endl;
+
+                    result += b64_table[table_index];
+                }
+            }
+
+            result.append( (result.size()-1) % 3, '=');
+            return result;
+        }
 
     private:
         unsigned int dimension, owningProcessor;
