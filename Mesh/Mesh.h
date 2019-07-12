@@ -31,13 +31,24 @@ class Mesh {
         void findRingNodes();
         std::vector<unsigned int> getRingNodes(const unsigned int i) const {return ringNodeIndices[i];}
 
-        static std::string base64_encode(const std::vector<unsigned int> &vals){
+        template<typename T, typename length>
+        static std::string base64_encode(const std::vector<T> &vals){
             std::string b64_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
+            union {
+                T input;
+                length output;
+            } data;
+
+            // std::cout << "Size of: " << sizeof(length)*8 << std::endl;
+
             std::string bit_string = "";
-            bit_string.reserve(32 * vals.size());
-            for (const auto item : vals)
-                bit_string += std::bitset<32>(item).to_string();
+            bit_string.reserve(sizeof(length)*8 * vals.size());
+            for (const auto item : vals){
+                data.input = item;
+                // std::cout << item << " -> " << std::bitset<sizeof(length)*8>(data.output) << std::endl;
+                bit_string += std::bitset<sizeof(length)*8>(data.output).to_string();
+            }
 
             std::string result = "";
             for (unsigned int bit_index = 0; bit_index < bit_string.size(); bit_index += 24){

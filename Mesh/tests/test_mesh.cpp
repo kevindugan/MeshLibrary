@@ -35,7 +35,7 @@ TEST(MeshLib_Mesh, Encode_base_64){
     std::vector<unsigned int> vec_int = {8, 16, 24, 32, 40, 48, 56, 64};
 
     std::string expected = "AAAACAAAABAAAAAYAAAAIAAAACgAAAAwAAAAOAAAAEA";
-    std::string b_64_val = Mesh::base64_encode(vec_int);
+    std::string b_64_val = Mesh::base64_encode<unsigned int,int32_t>(vec_int);
     EXPECT_EQ(b_64_val.size(), expected.size());
     EXPECT_STREQ(b_64_val.c_str(), expected.c_str());
 }

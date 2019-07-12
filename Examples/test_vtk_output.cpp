@@ -4,8 +4,8 @@
 
 int main (){
 
-    // Mesh testMesh({0.0, 0.0, 0.0}, {1.0, 1.0, 1.0}, {4, 5, 6});
-    Mesh testMesh({0.0, 0.0}, {1.0, 1.0}, {2, 3});
+    Mesh testMesh({0.0, 0.0, 0.0}, {1.0, 1.0, 1.0}, {4, 5, 6});
+    // Mesh testMesh({0.0, 0.0}, {1.0, 1.0}, {2, 3});
     testMesh.partitionMesh(3);
 
     std::ofstream output_vtk_ascii("output_vtk_ascii.vtu", std::ofstream::out);
