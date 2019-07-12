@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "MeshWriter.h"
 #include "gmock/gmock.h"
 #include <sstream>
 #include <fstream>
@@ -29,26 +30,6 @@ TEST(DebugTestName(MeshLib_Mesh), constructor){
     // min greater than max
     EXPECT_DEATH(Mesh mesh({0.0, 0.0, 0.1}, {0.1, 0.1, 0.0}, {1, 1, 2}), "");
     EXPECT_DEATH(Mesh mesh({0.0, 0.1, 0.1}, {0.1, 0.1, 0.0}, {1, 1, 2}), "");
-}
-
-TEST(MeshLib_Mesh, print){
-    Mesh cart({0.0, 0.0},
-              {1.0, 2.0},
-              {3, 3});
-
-    Mesh cart2({0.0, 0.0, 0.0},
-               {1.0, 2.0, 3.0},
-               {5, 3, 2});
-
-    std::stringstream output1;
-    cart.print(output1);
-
-    std::stringstream output2;
-    cart2.print(output2);
-
-    EXPECT_GT(output1.str().size(), 0);
-    EXPECT_GT(output2.str().size(), 0);
-    EXPECT_GT(output2.str().size(), output1.str().size());
 }
 
 TEST(MeshLib_Mesh, adjacency){
@@ -171,7 +152,8 @@ TEST(MeshLib_Mesh, partition){
 
     cart.partitionMesh(8);
     std::ofstream output2d("output2d.vtu", std::ofstream::out);
-    cart.print(output2d);
+    MeshWriter writer2d(cart);
+    writer2d.outputVTK(output2d, MeshWriter::ascii);
     output2d.close();
 
     start = high_resolution_clock::now();
@@ -183,7 +165,8 @@ TEST(MeshLib_Mesh, partition){
 
     cart2.partitionMesh(8);
     std::ofstream output3d("output3d.vtu", std::ofstream::out);
-    cart2.print(output3d);
+    MeshWriter writer3d(cart2);
+    writer3d.outputVTK(output3d, MeshWriter::ascii);
     output3d.close();
 }
 
@@ -200,7 +183,8 @@ TEST(MeshLib_Mesh, get_ring_nodes2d){
     // printf("};\n");
 
     // std::ofstream out("outputRind.vtu", std::ofstream::out);
-    // cart.print(out);
+    // MeshWriter writer(cart);
+    // writer.outputVTK(out, MeshWriter::ascii);
     // out.close();
 
     std::vector<unsigned int> partition = { 1, 1, 1, 1, 2, 2, 2, 4, 4, 4, 4,
@@ -244,7 +228,8 @@ TEST(MeshLib_Mesh, get_ring_nodes3d){
     // printf("};\n");
 
     // std::ofstream out("outputRind.vtu", std::ofstream::out);
-    // cart.print(out);
+    // MeshWriter writer(cart);
+    // writer.outputVTK(out, MeshWriter::ascii);
     // out.close();
 
     std::vector<unsigned int> partition = { 4, 4, 4, 4, 3, 3, 3, 0, 0, 0, 0,

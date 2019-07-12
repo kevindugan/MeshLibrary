@@ -6,9 +6,11 @@
 
 class MeshWriter {
     public:
+        enum vtkFormat {ascii, binary, compressed};
+
         MeshWriter(const Mesh&);
 
-        void outputVTK(std::ostream &out = std::cout);
+        void outputVTK(std::ostream &out = std::cout, vtkFormat=MeshWriter::binary);
         void openXMLSection(std::ostream &out,
                             const std::string &title,
                             const std::vector<std::string> &headerInfo ={});

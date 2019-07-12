@@ -17,8 +17,6 @@ class Mesh {
              const std::vector<float> &,
              const std::vector<unsigned int> &,
              unsigned int processor=0);
-
-        void print(std::ostream &out=std::cout) const;
         
         Pair_UI_UI getElementAdjacency() const;
         void partitionMesh(const unsigned int nPartitions);
