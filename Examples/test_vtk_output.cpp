@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "MeshWriter.h"
 #include <fstream>
 
 
@@ -13,7 +14,8 @@ int main (){
     output_vtk_ascii.close();
 
     std::ofstream output_vtk_bin("output_vtk_binary.vtu", std::ofstream::out | std::ofstream::binary);
-    testMesh.outputVTK(output_vtk_bin);
+    MeshWriter writer(testMesh);
+    writer.outputVTK(output_vtk_bin);
     output_vtk_bin.close();
 
     return 0;

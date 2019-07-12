@@ -11,3 +11,7 @@ add_test(TestElement testElement)
 add_executable(testMesh test_mesh.cpp)
 target_link_libraries(testMesh Mesh)
 add_test(TestMesh testMesh)
+
+add_executable(testMeshWriter test_mesh_writer.cpp)
+target_link_libraries(testMeshWriter Mesh)
+add_test(TestMeshWriter testMeshWriter)

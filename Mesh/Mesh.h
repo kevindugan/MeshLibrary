@@ -19,7 +19,6 @@ class Mesh {
              unsigned int processor=0);
 
         void print(std::ostream &out=std::cout) const;
-        void outputVTK(std::ostream &out=std::cout) const;
         
         Pair_UI_UI getElementAdjacency() const;
         void partitionMesh(const unsigned int nPartitions);
@@ -27,12 +26,12 @@ class Mesh {
         std::vector<unsigned int> getPartition() const {return partition;}
         void setPartition(const std::vector<unsigned int> &other) {partition = other;}
         std::vector<std::shared_ptr<Node>> getVertices() const {return vertices;}
+        std::vector<std::shared_ptr<Element>> getElements() const {return elements;}
+        std::vector<std::vector<unsigned int>> getConnectivity() const {return elementConnectivity;}
+        unsigned int getDimension() const {return dimension;}
 
         void findRingNodes();
         std::vector<unsigned int> getRingNodes(const unsigned int i) const {return ringNodeIndices[i];}
-
-        template<typename T, typename length>
-        static std::string base64_encode(const std::vector<T> &vals);
 
     private:
         unsigned int dimension, owningProcessor;
@@ -47,7 +46,5 @@ class Mesh {
                               const std::vector<unsigned int> &nCells);
         void generateElements(const std::vector<unsigned int> &nCells);
 };
-
-#include "Mesh.hpp"
 
 #endif // MESH_H_C0A0

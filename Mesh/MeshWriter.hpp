@@ -2,7 +2,7 @@
 
 
 template<typename T, typename length>
-std::string Mesh::base64_encode(const std::vector<T> &vals){
+std::string MeshWriter::base64_encode(const std::vector<T> &vals){
     // Base 64 encoding table. Each Letter represents a number between 0-63.
     std::string b64_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
