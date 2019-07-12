@@ -194,9 +194,7 @@ void Mesh::outputVTK(std::ostream &out) const {
     indent = increaseIndent(indent);
     out << indent << "<DataArray Name=\"Partition\" type=\"Int32\" NumberOfComponents=\"1\" format=\"binary\">" << std::endl;
     indent = increaseIndent(indent);
-    std::cout << "Partition Length: " << this->partition.size() << std::endl;
-    out << this->base64_encode<unsigned int,int32_t>({(unsigned int)this->partition.size()*4}) << this->base64_encode<unsigned int,int32_t>(this->partition);
-    out << std::endl;
+    out << indent << this->base64_encode<unsigned int,int32_t>({(unsigned int)this->partition.size()*4}) << this->base64_encode<unsigned int,int32_t>(this->partition) << std::endl;
     indent = decreaseIndent(indent);
     out << indent << "</DataArray>" << std::endl;
     indent = decreaseIndent(indent);
@@ -219,8 +217,7 @@ void Mesh::outputVTK(std::ostream &out) const {
         for (unsigned int i = this->dimension; i < 3; i++)
             coords.push_back(0.0);
     }
-    out << this->base64_encode<unsigned int,int32_t>({(unsigned int)coords.size()*4}) << this->base64_encode<float,int32_t>(coords);
-    out << std::endl;
+    out << indent << this->base64_encode<unsigned int,int32_t>({(unsigned int)coords.size()*4}) << this->base64_encode<float,int32_t>(coords) << std::endl;
     indent = decreaseIndent(indent);
     out << indent << "</DataArray>" << std::endl;
     indent = decreaseIndent(indent);
@@ -241,8 +238,7 @@ void Mesh::outputVTK(std::ostream &out) const {
         for (const auto &p : e)
             connect.push_back(p);
     }
-    out << this->base64_encode<unsigned int,int32_t>({(unsigned int)connect.size()*4}) << this->base64_encode<unsigned int,int32_t>(connect);
-    out << std::endl;
+    out << indent << this->base64_encode<unsigned int,int32_t>({(unsigned int)connect.size()*4}) << this->base64_encode<unsigned int,int32_t>(connect) << std::endl;
     indent = decreaseIndent(indent);
     out << indent << "</DataArray>" << std::endl;
 
@@ -256,8 +252,7 @@ void Mesh::outputVTK(std::ostream &out) const {
     offset_vec.reserve(this->elementConnectivity.size());
     for (const auto &e : this->elementConnectivity)
         offset_vec.push_back( index += offset );
-    out << this->base64_encode<unsigned int,int32_t>({(unsigned int)offset_vec.size()*4}) << this->base64_encode<unsigned int,int32_t>(offset_vec);
-    out << std::endl;
+    out << indent << this->base64_encode<unsigned int,int32_t>({(unsigned int)offset_vec.size()*4}) << this->base64_encode<unsigned int,int32_t>(offset_vec) << std::endl;
     indent = decreaseIndent(indent);
     out << indent << "</DataArray>" << std::endl;
     
@@ -278,8 +273,7 @@ void Mesh::outputVTK(std::ostream &out) const {
     for (const auto &e : this->elementConnectivity){
         type_vec.push_back( elementType );
     }
-    out << this->base64_encode<unsigned int,int32_t>({(unsigned int)type_vec.size()}) << this->base64_encode<unsigned int,uint8_t>(type_vec);
-    out << std::endl;
+    out << indent << this->base64_encode<unsigned int,int32_t>({(unsigned int)type_vec.size()}) << this->base64_encode<unsigned int,uint8_t>(type_vec) << std::endl;
     indent = decreaseIndent(indent);
     out << indent << "</DataArray>" << std::endl;
     indent = decreaseIndent(indent);
