@@ -38,11 +38,34 @@ TEST(MeshLib_Writer, xml_sections){
 
 }
 
-TEST(MeshLib_Writer, Encode_base_64){
+TEST(MeshLib_Writer, convert_to_bitstream){
     std::vector<unsigned int> vec_int = {8, 16, 24, 32, 40, 48, 56, 64};
 
+    std::string expected  = "00000000000000000000000000001000";
+                expected += "00000000000000000000000000010000";
+                expected += "00000000000000000000000000011000";
+                expected += "00000000000000000000000000100000";
+                expected += "00000000000000000000000000101000";
+                expected += "00000000000000000000000000110000";
+                expected += "00000000000000000000000000111000";
+                expected += "00000000000000000000000001000000";
+    std::string bitStream = MeshWriter::getBitStream<unsigned int,int32_t>(vec_int);
+    EXPECT_EQ(bitStream.size(), expected.size());
+    EXPECT_STREQ(bitStream.c_str(), expected.c_str());
+}
+
+TEST(MeshLib_Writer, base64_encode){
+    std::string bitStream  = "00000000000000000000000000001000";
+                bitStream += "00000000000000000000000000010000";
+                bitStream += "00000000000000000000000000011000";
+                bitStream += "00000000000000000000000000100000";
+                bitStream += "00000000000000000000000000101000";
+                bitStream += "00000000000000000000000000110000";
+                bitStream += "00000000000000000000000000111000";
+                bitStream += "00000000000000000000000001000000";
+
     std::string expected = "AAAACAAAABAAAAAYAAAAIAAAACgAAAAwAAAAOAAAAEA";
-    std::string b_64_val = MeshWriter::base64_encode<unsigned int,int32_t>(vec_int);
+    std::string b_64_val = MeshWriter::base64_encode(bitStream);
     EXPECT_EQ(b_64_val.size(), expected.size());
     EXPECT_STREQ(b_64_val.c_str(), expected.c_str());
 }

@@ -17,7 +17,10 @@ class MeshWriter {
         void closeXMLSection(std::ostream &out);
         
         template<typename T, typename length>
-        static std::string base64_encode(const std::vector<T> &vals);
+        static std::string vtkDataToBinary(const std::vector<T> &vals);
+        template<typename T, typename length>
+        static std::string getBitStream(const std::vector<T> &vals);
+        static std::string base64_encode(const std::string &bit_string);
 
     private:
         const Mesh& referenceMesh;

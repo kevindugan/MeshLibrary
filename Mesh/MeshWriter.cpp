@@ -36,8 +36,7 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
                 out << this->indent << std::setw(6) << elem << std::endl;
         } else if (outputFormat == MeshWriter::binary){
             out << this->indent
-                << base64_encode<unsigned int, int32_t>({(unsigned int)partition.size()*4})
-                << base64_encode<unsigned int, int32_t>(partition)
+                << vtkDataToBinary<unsigned int, int32_t>(partition)
                 << std::endl;
         }
     }
@@ -70,8 +69,7 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
                     << std::endl;
         } else if (outputFormat == MeshWriter::binary){
             out << this->indent
-                << base64_encode<unsigned int, int32_t>({(unsigned int)coords.size()*4})
-                << base64_encode<float, int32_t>(coords)
+                << vtkDataToBinary<float, int32_t>(coords)
                 << std::endl;
         }
     }
@@ -102,8 +100,7 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
             }
         } else if (outputFormat == MeshWriter::binary){
             out << this->indent
-                << base64_encode<unsigned int, int32_t>({(unsigned int)connect.size()*4})
-                << base64_encode<unsigned int, int32_t>(connect)
+                << vtkDataToBinary<unsigned int, int32_t>(connect)
                 << std::endl;
         }
     }
@@ -128,8 +125,7 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
                     << std::endl;
         } else if (outputFormat == MeshWriter::binary){
             out << this->indent
-                << base64_encode<unsigned int, int32_t>({(unsigned int)offset.size()*4})
-                << base64_encode<unsigned int, int32_t>(offset)
+                << vtkDataToBinary<unsigned int, int32_t>(offset)
                 << std::endl;
         }
     }
@@ -156,8 +152,7 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
                     << std::endl;
         } else if (outputFormat == MeshWriter::binary){
             out << this->indent
-                << base64_encode<unsigned int, int32_t>({(unsigned int)types.size()})
-                << base64_encode<unsigned int, uint8_t>(types)
+                << vtkDataToBinary<unsigned int, uint8_t>(types)
                 << std::endl;
         }
     }
@@ -195,4 +190,42 @@ void MeshWriter::closeXMLSection(std::ostream &out){
     this->indent.pop_back();
 
     out << indent << "</" << title << ">" << std::endl;
+}
+
+std::string MeshWriter::base64_encode(const std::string &bit_string){
+    // Base 64 encoding table. Each Letter represents a number between 0-63.
+    std::string b64_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    // Convert bit stream to base 64 values by taking chunks of data 24 bits wide
+    // and converting a quad of 6-bit data to base64.
+    std::string result = "";
+    result.reserve( ceil(bit_string.size() / 6) );
+    for (unsigned int bit_index = 0; bit_index < bit_string.size(); bit_index += 24){
+
+        // Get next data chunk of 24 bits
+        std::string block_bit_value = bit_string.substr(bit_index, 24);
+
+        // Break the chunk into 6-bit increments for converting to base64
+        for (unsigned int i = 0; i < 24; i+=6){
+
+            // Leave this loop if we've run out of data to convert. This will
+            // require the data to be padded with '=' characters
+            if (block_bit_value.size() < i)
+                break;
+
+            // Gather 6-bit piece of data chunk and pad with '0' if remaining
+            // data is less than 6 bits in size
+            std::string chunk_bit_value = block_bit_value.substr(i, 6);
+            chunk_bit_value.append(6-chunk_bit_value.size(), '0');
+
+            // Convert the 6-bit data to an integer value for table lookup
+            unsigned int table_index = std::bitset<6>(chunk_bit_value).to_ulong();
+            result += b64_table[table_index];
+        }
+    }
+
+    // Pad the final result with '=' characters if the data stream did not completely
+    // fill the data chunks of 24 bits.
+    result.append( (result.size()-1) % 3, '=');
+    return result;
 }
