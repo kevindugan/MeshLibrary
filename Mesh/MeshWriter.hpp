@@ -8,6 +8,11 @@ std::string MeshWriter::vtkDataToBinary(const std::vector<T> &vals){
 }
 
 template<typename T, typename length>
+std::string MeshWriter::vtkDataToCompressedBinary(const std::vector<T> &vals){
+    return "";
+}
+
+template<typename T, typename length>
 std::string MeshWriter::getBitStream(const std::vector<T> &vals){
     // Used to convert the vector of input values to binary representations.
     // inputs of type T can be (unsigned int, float, etc), while outputs of

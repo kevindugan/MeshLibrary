@@ -18,5 +18,9 @@ int main (){
     writer.outputVTK(output_vtk_bin);
     output_vtk_bin.close();
 
+    std::ofstream output_vtk_compress("output_vtk_compressed.vtu", std::ofstream::out | std::ofstream::binary);
+    writer.outputVTK(output_vtk_compress, MeshWriter::compressed);
+    output_vtk_compress.close();
+
     return 0;
 }

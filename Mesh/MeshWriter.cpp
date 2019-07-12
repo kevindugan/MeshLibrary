@@ -12,6 +12,10 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
     std::vector<std::string> headerOptions = {"type=\"UnstructuredGrid\"", "version=\"0.1\""};
     if (outputFormat == MeshWriter::binary)
         headerOptions.push_back("byte_order=\"BigEndian\"");
+    else if (outputFormat == MeshWriter::compressed){
+        headerOptions.push_back("byte_order=\"BigEndian\"");
+        headerOptions.push_back("compressor=\"vtkZLibDataCompressor\"");
+    }
     this->openXMLSection(out, "VTKFile", headerOptions);
     this->openXMLSection(out, "UnstructuredGrid");
     std::string nPoints = "NumberOfPoints=\"" + std::to_string(vertices.size()) + "\"";
@@ -37,6 +41,10 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
         } else if (outputFormat == MeshWriter::binary){
             out << this->indent
                 << vtkDataToBinary<unsigned int, int32_t>(partition)
+                << std::endl;
+        } else if (outputFormat == MeshWriter::compressed){
+            out << this->indent
+                << vtkDataToCompressedBinary<unsigned int, int32_t>(partition)
                 << std::endl;
         }
     }
@@ -71,6 +79,10 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
             out << this->indent
                 << vtkDataToBinary<float, int32_t>(coords)
                 << std::endl;
+        } else if (outputFormat == MeshWriter::compressed){
+            out << this->indent
+                << vtkDataToCompressedBinary<float, int32_t>(coords)
+                << std::endl;
         }
     }
     this->closeXMLSection(out);
@@ -102,6 +114,10 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
             out << this->indent
                 << vtkDataToBinary<unsigned int, int32_t>(connect)
                 << std::endl;
+        } else if (outputFormat == MeshWriter::compressed){
+            out << this->indent
+                << vtkDataToCompressedBinary<unsigned int, int32_t>(connect)
+                << std::endl;
         }
     }
     this->closeXMLSection(out);
@@ -126,6 +142,10 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
         } else if (outputFormat == MeshWriter::binary){
             out << this->indent
                 << vtkDataToBinary<unsigned int, int32_t>(offset)
+                << std::endl;
+        } else if (outputFormat == MeshWriter::compressed){
+            out << this->indent
+                << vtkDataToCompressedBinary<unsigned int, int32_t>(offset)
                 << std::endl;
         }
     }
@@ -153,6 +173,10 @@ void MeshWriter::outputVTK(std::ostream &out, vtkFormat outputFormat){
         } else if (outputFormat == MeshWriter::binary){
             out << this->indent
                 << vtkDataToBinary<unsigned int, uint8_t>(types)
+                << std::endl;
+        } else if (outputFormat == MeshWriter::compressed){
+            out << this->indent
+                << vtkDataToCompressedBinary<unsigned int, uint8_t>(types)
                 << std::endl;
         }
     }
