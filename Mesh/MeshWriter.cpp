@@ -216,18 +216,24 @@ void MeshWriter::closeXMLSection(std::ostream &out){
     out << indent << "</" << title << ">" << std::endl;
 }
 
-std::string MeshWriter::base64_encode(const std::string &bit_string){
+std::string MeshWriter::base64_encode(const std::vector<uint8_t> &byte_vec){
     // Base 64 encoding table. Each Letter represents a number between 0-63.
     std::string b64_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     // Convert bit stream to base 64 values by taking chunks of data 24 bits wide
     // and converting a quad of 6-bit data to base64.
-    std::string result = "";
-    result.reserve( ceil(bit_string.size() / 6) );
-    for (unsigned int bit_index = 0; bit_index < bit_string.size(); bit_index += 24){
+    std::string result;
+    result.reserve( ceil(byte_vec.size() * 8 / 6) );
+    for (unsigned int byte_index = 0; byte_index < byte_vec.size(); byte_index += 3){
 
         // Get next data chunk of 24 bits
-        std::string block_bit_value = bit_string.substr(bit_index, 24);
+        std::string block_bit_value;
+        if (byte_index + 0 < byte_vec.size())
+            block_bit_value += std::bitset<8>(byte_vec[byte_index+0]).to_string();
+        if (byte_index + 1 < byte_vec.size())
+            block_bit_value += std::bitset<8>(byte_vec[byte_index+1]).to_string();
+        if (byte_index + 2 < byte_vec.size())
+            block_bit_value += std::bitset<8>(byte_vec[byte_index+2]).to_string();
 
         // Break the chunk into 6-bit increments for converting to base64
         for (unsigned int i = 0; i < 24; i+=6){

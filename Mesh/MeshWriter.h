@@ -21,8 +21,8 @@ class MeshWriter {
         template<typename T, typename length>
         static std::string vtkDataToCompressedBinary(const std::vector<T> &vals);
         template<typename T, typename length>
-        static std::string getBitStream(const std::vector<T> &vals);
-        static std::string base64_encode(const std::string &bit_string);
+        static std::vector<uint8_t> getBitVector(const std::vector<T> &vals);
+        static std::string base64_encode(const std::vector<uint8_t> &byte_string);
 
     private:
         const Mesh& referenceMesh;

@@ -7,3 +7,6 @@ target_link_libraries(ring_nodes Mesh)
 
 add_executable(vtk_output test_vtk_output.cpp)
 target_link_libraries(vtk_output Mesh)
+
+add_executable(binary_compression test_binary_compression.cpp)
+target_link_libraries(binary_compression Mesh)

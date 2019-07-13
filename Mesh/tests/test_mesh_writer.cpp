@@ -2,6 +2,8 @@
 #include "gmock/gmock.h"
 #include <sstream>
 
+using ::testing::ElementsAreArray;
+
 TEST(MeshLib_Writer, Init){
     Mesh cart({0.0, 0.0}, {1.0, 1.0}, {2,3});
     MeshWriter writer(cart);
@@ -41,31 +43,16 @@ TEST(MeshLib_Writer, xml_sections){
 TEST(MeshLib_Writer, convert_to_bitstream){
     std::vector<unsigned int> vec_int = {8, 16, 24, 32, 40, 48, 56, 64};
 
-    std::string expected  = "00000000000000000000000000001000";
-                expected += "00000000000000000000000000010000";
-                expected += "00000000000000000000000000011000";
-                expected += "00000000000000000000000000100000";
-                expected += "00000000000000000000000000101000";
-                expected += "00000000000000000000000000110000";
-                expected += "00000000000000000000000000111000";
-                expected += "00000000000000000000000001000000";
-    std::string bitStream = MeshWriter::getBitStream<unsigned int,int32_t>(vec_int);
+    std::vector<uint8_t> expected = {0, 0, 0, 8, 0, 0, 0, 16, 0, 0, 0, 24, 0, 0, 0, 32, 0, 0, 0, 40, 0, 0, 0, 48, 0, 0, 0, 56, 0, 0, 0, 64};
+    std::vector<uint8_t> bitStream = MeshWriter::getBitVector<unsigned int,int32_t>(vec_int);
     EXPECT_EQ(bitStream.size(), expected.size());
-    EXPECT_STREQ(bitStream.c_str(), expected.c_str());
+    EXPECT_THAT(bitStream, ElementsAreArray(expected));
 }
 
 TEST(MeshLib_Writer, base64_encode){
-    std::string bitStream  = "00000000000000000000000000001000";
-                bitStream += "00000000000000000000000000010000";
-                bitStream += "00000000000000000000000000011000";
-                bitStream += "00000000000000000000000000100000";
-                bitStream += "00000000000000000000000000101000";
-                bitStream += "00000000000000000000000000110000";
-                bitStream += "00000000000000000000000000111000";
-                bitStream += "00000000000000000000000001000000";
-
+    std::vector<uint8_t> byteStream = {0, 0, 0, 8, 0, 0, 0, 16, 0, 0, 0, 24, 0, 0, 0, 32, 0, 0, 0, 40, 0, 0, 0, 48, 0, 0, 0, 56, 0, 0, 0, 64};
     std::string expected = "AAAACAAAABAAAAAYAAAAIAAAACgAAAAwAAAAOAAAAEA";
-    std::string b_64_val = MeshWriter::base64_encode(bitStream);
+    std::string b_64_val = MeshWriter::base64_encode(byteStream);
     EXPECT_EQ(b_64_val.size(), expected.size());
     EXPECT_STREQ(b_64_val.c_str(), expected.c_str());
 }
