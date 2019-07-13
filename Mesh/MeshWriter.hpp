@@ -2,8 +2,8 @@
 template<typename T, typename length>
 std::string MeshWriter::vtkDataToBinary(const std::vector<T> &vals){
     unsigned int nBytesData = vals.size() * sizeof(length);
-    std::string converted_header = base64_encode(getBitVector<unsigned int,int32_t>({nBytesData}));
-    std::string converted_data = base64_encode(getBitVector<T,length>(vals));
+    std::string converted_header = base64_encode(getByteVector<unsigned int,int32_t>({nBytesData}));
+    std::string converted_data = base64_encode(getByteVector<T,length>(vals));
     return converted_header + converted_data;
 }
 
@@ -13,7 +13,7 @@ std::string MeshWriter::vtkDataToCompressedBinary(const std::vector<T> &vals){
 }
 
 template<typename T, typename length>
-std::vector<uint8_t> MeshWriter::getBitVector(const std::vector<T> &vals){
+std::vector<uint8_t> MeshWriter::getByteVector(const std::vector<T> &vals){
     // Used to convert the vector of input values to binary representations.
     // inputs of type T can be (unsigned int, float, etc), while outputs of
     // type length are fixed width integer types (int32_t, uint8_t, etc.).
