@@ -44,7 +44,7 @@ TEST(MeshLib_Writer, convert_to_bitstream){
     std::vector<unsigned int> vec_int = {8, 16, 24, 32, 40, 48, 56, 64};
 
     std::vector<uint8_t> expected = {0, 0, 0, 8, 0, 0, 0, 16, 0, 0, 0, 24, 0, 0, 0, 32, 0, 0, 0, 40, 0, 0, 0, 48, 0, 0, 0, 56, 0, 0, 0, 64};
-    std::vector<uint8_t> bitStream = MeshWriter::getBitVector<unsigned int,int32_t>(vec_int);
+    std::vector<uint8_t> bitStream = MeshWriter::getByteVector<unsigned int,int32_t>(vec_int);
     EXPECT_EQ(bitStream.size(), expected.size());
     EXPECT_THAT(bitStream, ElementsAreArray(expected));
 }
